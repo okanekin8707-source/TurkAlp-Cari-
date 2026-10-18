@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TürkAlp Teknoloji - Müşteri Takip</title>
+    <title>TürkAlp - Alacak - Verecek Takibi</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
@@ -20,6 +20,11 @@
         .green { color: #009933; font-weight: bold; }
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
+
+        /* Başlık Özel Stili */
+        .baslik-container { display: flex; flex-direction: column; }
+        .baslik-ust { color: #cc0000; font-size: 20px; font-weight: bold; margin: 0; letter-spacing: 1px; }
+        .baslik-alt { color: #555; font-size: 12px; margin-top: 2px; font-weight: bold; }
 
         /* Menü Stilleri */
         .menu-container { position: relative; display: inline-block; }
@@ -324,7 +329,10 @@
     <!-- ŞİFRE GİRİŞ EKRANI -->
     <div id="sifreEkrani">
         <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
-            <h3 style="color: #0066cc; margin-top: 0;">TürkAlp Güvenlik</h3>
+            <div class="baslik-container" style="align-items: center; margin-bottom: 15px;">
+                <h2 class="baslik-ust">TÜRKALP</h2>
+                <span class="baslik-alt">Alacak - Verecek Takibi</span>
+            </div>
             <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
             <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
             <button onclick="sifreKontrol()">Giriş Yap</button>
@@ -334,7 +342,10 @@
     <!-- ANA UYGULAMA -->
     <div id="anaUygulama" style="display:none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h2 style="color:#0066cc; margin:0;">TürkAlp Müşteri Takip</h2>
+            <div class="baslik-container">
+                <h2 class="baslik-ust">TÜRKALP</h2>
+                <span class="baslik-alt">Alacak - Verecek Takibi</span>
+            </div>
             
             <!-- AÇILIR MENÜ ALANI -->
             <div class="menu-container">
@@ -348,10 +359,9 @@
 
         <!-- YENİ MÜŞTERİ EKLEME -->
         <div class="box">
-            <b>Yeni Müşteri Ekle</b>
-            <label>Müşteri Adı:</label>
-            <input type="text" id="yeniAd" placeholder="Örn: Ahmet Yılmaz">
-            <button onclick="kaydet()">Müşteriyi Kaydet</button>
+            <label>Yeni Müşteri:</label>
+            <input type="text" id="yeniAd" placeholder="Müşteri adı...">
+            <button onclick="kaydet()">Kaydet</button>
         </div>
 
         <!-- MÜŞTERİ ARAMA KUTUSU -->
