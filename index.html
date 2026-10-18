@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TürkAlp Teknoloji - Profesyonel Ön Muhasebe v12</title>
+    <title>TürkAlp Teknoloji - Ön Muhasebe v13</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,11 +21,11 @@
             <i class="fa-solid fa-calculator text-xl"></i>
             <div>
                 <h1 class="font-bold text-sm leading-tight">TürkAlp Teknoloji</h1>
-                <span class="text-[10px] text-blue-200">Profesyonel Ön Muhasebe v12</span>
+                <span class="text-[10px] text-blue-200">Ön Muhasebe v13</span>
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <button onclick="verileriDisariAktar()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-2.5 py-1.5 rounded-lg border border-blue-500 transition shadow-sm" title="Yedek Al">
+            <button type="button" onclick="verileriDisariAktar()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-2.5 py-1.5 rounded-lg border border-blue-500 transition shadow-sm" title="Yedek Al">
                 <i class="fa-solid fa-download"></i>
             </button>
         </div>
@@ -35,10 +35,10 @@
 
         <!-- SEKME MENÜSÜ -->
         <div class="bg-slate-200 p-1.5 rounded-2xl flex text-xs font-bold shadow-inner">
-            <button type="button" id="btnTabMusteri" onclick="sekmeDegis('musteri')" class="flex-1 py-3 rounded-xl bg-white text-blue-700 shadow-sm transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-users">*</i> MÜŞTERİLER
+            <button type="button" id="btnTabMusteri" onclick="sekmeDegis('musteri')" class="flex-1 py-3 rounded-xl bg-white text-blue-700 shadow-sm transition flex items-center justify-center gap-2 font-bold">
+                <i class="fa-solid fa-users"></i> MÜŞTERİLER
             </button>
-            <button type="button" id="btnTabToptanci" onclick="sekmeDegis('toptanci')" class="flex-1 py-3 rounded-xl text-slate-600 transition flex items-center justify-center gap-2">
+            <button type="button" id="btnTabToptanci" onclick="sekmeDegis('toptanci')" class="flex-1 py-3 rounded-xl text-slate-600 transition flex items-center justify-center gap-2 font-bold">
                 <i class="fa-solid fa-truck"></i> TOPTANCILAR
             </button>
         </div>
@@ -55,10 +55,10 @@
             </div>
 
             <!-- Tekli Kayıt Formu -->
-            <div id="tekliFormContainer" class="space-y-3">
+            <form id="formTekli" onsubmit="kisiEkleForm(event)" class="space-y-3">
                 <div class="space-y-1">
                     <label id="lblUnvan" class="block text-xs font-bold text-slate-600">Müşteri / Firma Ünvanı *</label>
-                    <input type="text" id="inpUnvan" placeholder="Örn: Ahmet Ticaret / Firma Adı" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500 focus:bg-white transition">
+                    <input type="text" id="inpUnvan" required placeholder="Örn: Ahmet Ticaret / Firma Adı" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500 focus:bg-white transition">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div class="space-y-1">
@@ -70,21 +70,21 @@
                         <input type="number" step="0.01" id="inpBakiye" placeholder="0.00" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500 focus:bg-white transition">
                     </div>
                 </div>
-                <button type="button" onclick="kisiEkle()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-3 rounded-xl text-sm shadow-md shadow-blue-200 transition flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-3 rounded-xl text-sm shadow-md shadow-blue-200 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus-circle"></i> Kaydı Sisteme Ekle
                 </button>
-            </div>
+            </form>
 
             <!-- Toplu Kayıt Formu -->
-            <div id="topluFormContainer" class="space-y-3 hidden">
+            <form id="formToplu" onsubmit="topluKisiKaydetForm(event)" class="space-y-3 hidden">
                 <div class="space-y-1">
                     <label class="block text-xs font-bold text-slate-600">İsimleri veya Firma Unvanlarını Alt Alta Yazın:</label>
                     <textarea id="txtToplu" rows="4" placeholder="Ahmet Yılmaz&#10;Mehmet Demir&#10;Örnek Bilgisayar Ltd." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:border-blue-500 focus:bg-white transition custom-scroll"></textarea>
                 </div>
-                <button type="button" onclick="topluKisiKaydet()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-2.5 rounded-xl text-xs shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-2.5 rounded-xl text-xs shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-layer-group"></i> Tümünü Tek Seferde Kaydet
                 </button>
-            </div>
+            </form>
         </div>
 
         <!-- ÖZET FİNANSAL KART -->
@@ -140,7 +140,7 @@
             </div>
 
             <!-- İşlem / Malzeme / Ürün Ekleme Paneli -->
-            <div class="bg-blue-50/70 p-3.5 rounded-2xl border border-blue-100 space-y-3">
+            <form onsubmit="islemKaydetForm(event)" class="bg-blue-50/70 p-3.5 rounded-2xl border border-blue-100 space-y-3">
                 <h4 class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
                     <i class="fa-solid fa-file-invoice-dollar text-blue-600"></i> YENİ HAREKET / İŞLEM EKLE
                 </h4>
@@ -154,17 +154,17 @@
                     </div>
                     <div class="space-y-1">
                         <label class="block text-[10px] font-bold text-slate-600">Tutar (₺)</label>
-                        <input type="number" step="0.01" id="islemTutar" placeholder="0.00" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:border-blue-500">
+                        <input type="number" step="0.01" id="islemTutar" required placeholder="0.00" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:border-blue-500">
                     </div>
                 </div>
                 <div class="space-y-1">
                     <label class="block text-[10px] font-bold text-slate-600">Açıklama / Ürün Adı</label>
                     <input type="text" id="islemAciklama" placeholder="Örn: 5000 TL Nakit Ödeme / Ekran Değişimi" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:border-blue-500">
                 </div>
-                <button type="button" onclick="islemKaydet()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-check"></i> İşlemi Kaydet ve Hesapla
                 </button>
-            </div>
+            </form>
 
             <!-- Hesap Geçmişi -->
             <div class="space-y-2">
@@ -190,19 +190,17 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT ÇEKİRDEK MİMARİSİ (400+ Satır Kontrol Katmanı) -->
+    <!-- JAVASCRIPT ÇEKİRDEK MİMARİSİ -->
     <script>
-        const DB_VERSION_KEY = 'turkalp_muhasebe_pro_v12';
-        let aktifSekme = 'musteri'; // 'musteri' veya 'toptanci'
+        const DB_VERSION_KEY = 'turkalp_muhasebe_v13_db';
+        let aktifSekme = 'musteri';
         let seciliKisiId = null;
 
-        // Sayfa Yüklenme Tetikleyicisi
         window.addEventListener('DOMContentLoaded', () => {
             verileriMigreEt();
             listeyiCiz();
         });
 
-        // Veri Tabanı Okuma
         function dbOku() {
             const rawData = localStorage.getItem(DB_VERSION_KEY);
             if (!rawData) return { musteri: [], toptanci: [] };
@@ -213,21 +211,18 @@
                     toptanci: Array.isArray(parsed.toptanci) ? parsed.toptanci : []
                 };
             } catch (err) {
-                console.error("Veri okuma hatası:", err);
                 return { musteri: [], toptanci: [] };
             }
         }
 
-        // Veri Tabanı Yazma
         function dbYaz(data) {
             localStorage.setItem(DB_VERSION_KEY, JSON.stringify(data));
         }
 
-        // Geçmiş Sürümlerden Veri Kurtarma (Migration)
         function verileriMigreEt() {
             if (localStorage.getItem(DB_VERSION_KEY)) return;
             
-            const eskiKeys = ['turkalp_sabit_v11', 'turkalp_muhasebe_v10', 'turkalp_muhasebe_kalici_db', 'turkalp_muhasebe_v8'];
+            const eskiKeys = ['turkalp_muhasebe_pro_v12', 'turkalp_sabit_v11', 'turkalp_muhasebe_v10', 'turkalp_muhasebe_kalici_db'];
             let kurtarilan = { musteri: [], toptanci: [] };
 
             for (let key of eskiKeys) {
@@ -248,7 +243,6 @@
             dbYaz(kurtarilan);
         }
 
-        // Sekme Değiştirme Fonksiyonu
         function sekmeDegis(sekme) {
             aktifSekme = sekme;
             const btnM = document.getElementById('btnTabMusteri');
@@ -256,7 +250,6 @@
             const formBaslik = document.getElementById('formBaslik');
             const lblUnvan = document.getElementById('lblUnvan');
             const inpUnvan = document.getElementById('inpUnvan');
-            const listeBaslik = document.getElementById('listeBaslik');
 
             if (sekme === 'musteri') {
                 btnM.className = "flex-1 py-3 rounded-xl bg-white text-blue-700 shadow-sm transition flex items-center justify-center gap-2 font-bold";
@@ -274,21 +267,16 @@
             listeyiCiz();
         }
 
-        // Toplu Form Göster/Gizle
         function topluFormToggle() {
-            const tekli = document.getElementById('tekliFormContainer');
-            const toplu = document.getElementById('topluFormContainer');
-            if (tekli.style.display === 'none') {
-                tekli.style.display = 'block';
-                toplu.style.display = 'none';
-            } else {
-                tekli.style.display = 'none';
-                toplu.style.display = 'block';
-            }
+            const tekli = document.getElementById('formTekli');
+            const toplu = document.getElementById('formToplu');
+            tekli.classList.toggle('hidden');
+            toplu.classList.toggle('hidden');
         }
 
-        // Tekli Kişi Ekleme
-        function kisiEkle() {
+        // Tekli Kişi Ekleme (Form Submit Garantili)
+        function kisiEkleForm(e) {
+            e.preventDefault();
             const unvanInp = document.getElementById('inpUnvan');
             const telInp = document.getElementById('inpTel');
             const bakiyeInp = document.getElementById('inpBakiye');
@@ -297,15 +285,11 @@
             const tel = telInp.value.trim();
             const bakiye = parseFloat(bakiyeInp.value) || 0;
 
-            if (!unvan) {
-                alert('Lütfen geçerli bir unvan veya isim giriniz.');
-                unvanInp.focus();
-                return;
-            }
+            if (!unvan) return;
 
             const db = dbOku();
             const yeniKayit = {
-                id: 'id_' + Date.now() + '_' + Math.random().toString(36.2),
+                id: 'id_' + Date.now() + '_' + Math.floor(Math.random()*1000),
                 unvan: unvan,
                 tel: tel,
                 bakiye: bakiye,
@@ -327,13 +311,11 @@
         }
 
         // Toplu Kişi Ekleme
-        function topluKisiKaydet() {
+        function topluKisiKaydetForm(e) {
+            e.preventDefault();
             const txt = document.getElementById('txtToplu');
             const val = txt.value.trim();
-            if (!val) {
-                alert('Lütfen alt alta isimler yazın.');
-                return;
-            }
+            if (!val) return;
 
             const satirlar = val.split('\n');
             const db = dbOku();
@@ -342,7 +324,7 @@
                 const temizUnvan = satir.trim();
                 if (temizUnvan) {
                     db[aktifSekme].unshift({
-                        id: 'id_' + (Date.now() + idx) + '_' + Math.random().toString(36.2),
+                        id: 'id_' + (Date.now() + idx),
                         unvan: temizUnvan,
                         tel: '',
                         bakiye: 0,
@@ -357,7 +339,7 @@
             listeyiCiz();
         }
 
-        // Listeyi Ekrana Çizme ve Özet Hesaplama
+        // Listeyi Çizme
         function listeyiCiz() {
             const db = dbOku();
             const liste = db[aktifSekme] || [];
@@ -365,7 +347,20 @@
             const container = document.getElementById('kisiListesiContainer');
             container.innerHTML = '';
 
-            let toplamVerilen = 0; // Bakiye > 0 (Verilen / Alacaklı olunan)
-            let toplamAlinan = 0;  // Bakiye < 0 (Alınan / Borçlu olunan)
+            let toplamVerilen = 0;
+            let toplamAlinan = 0;
 
-    
+            const filtrelenmis = liste.filter(item => item.unvan.toLowerCase().includes(aramaKriteri));
+            document.getElementById('kisiSayaci').textContent = `(${filtrelenmis.length})`;
+
+            if (filtrelenmis.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-xs text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">Kayıtlı veri bulunamadı.</div>`;
+            }
+
+            filtrelenmis.forEach(item => {
+                const b = Number(item.bakiye) || 0;
+                if (b > 0) toplamVerilen += b;
+                if (b < 0) toplamAlinan += Math.abs(b);
+
+                let renk = b > 0 ? 'text-rose-600' : (b < 0 ? 'text-emerald-600' : 'text-slate-400');
+                let durumMetni = b > 0 ? 'Borçlu (Verdin)' : (b < 0 ? 'Alacaklı (Aldın)' : '
