@@ -13,10 +13,7 @@
         .red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
         .green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
         .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
-        
-        /* Geçmiş Kaydı Satır Düzeni ve Sil Butonu */
         .history { background: white; padding: 8px; border-radius: 4px; margin-top: 6px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        
         .red { color: #cc0000; font-weight: bold; }
         .green { color: #009933; font-weight: bold; }
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -137,7 +134,7 @@
                 globalListe.sort((a, b) => b.timestamp - a.timestamp);
             } catch (e) {
                 console.error("Veri çekme hatası: ", e);
-                alert("Buluttan veriler yüklenirken bir hata oluştu.");
+                alert("Buluttan veriler yüklenirken hata oluştu.");
             }
             if (yukleniyor) yukleniyor.style.display = 'none';
             listeyiEkranaBas();
@@ -190,17 +187,5 @@
             if (sayac) sayac.textContent = filtrelenmisListe.length;
 
             if (filtrelenmisListe.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:#777; padding:10px;">Kayıtlı müşteri bulunamadı.</div>';
-                return;
-            }
 
-            filtrelenmisListe.forEach(function(m) {
-                var bakiye = Number(m.bakiye) || 0;
-                var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
-                var bgClass = bakiye > 0 ? 'red-bg' : (bakiye < 0 ? 'green-bg' : '');
-                var durumMetni = bakiye > 0 ? 'Alacaklısınız (Borçlu)' : (bakiye < 0 ? 'Borçlusunuz (Alacaklı)' : 'Dengede');
-
-                var div = document.createElement('div');
-                div.className = 'kisi';
-                if (bgClass) div.classList.add(bgClass);
         
