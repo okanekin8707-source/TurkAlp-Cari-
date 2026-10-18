@@ -5,65 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Türkalp Teknoloji - Ön Muhasebe</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 min-h-screen pb-10">
 
     <!-- Header -->
     <header class="bg-blue-800 text-white p-4 shadow-lg sticky top-0 z-10">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Türkalp Teknoloji</h1>
-            <span class="text-xs bg-blue-900 px-2 py-1 rounded">Ön Muhasebe</span>
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <i class="fa-solid fa-calculator"></i> Türkalp Teknoloji
+            </h1>
+            <span class="text-xs bg-blue-900 px-3 py-1 rounded-full border border-blue-700">Cari & Hareket Takip</span>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto p-4 space-y-6">
 
-        <!-- Cari Ekleme Formu -->
-        <section class="bg-white p-4 rounded-lg shadow-md">
-            <h2 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-2">Yeni Cari / Müşteri Ekle</h2>
+        <!-- Yeni Cari Ekleme Formu -->
+        <section class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
+            <h2 class="text-base font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-blue-600"></i> Yeni Müşteri / Cari Ekle
+            </h2>
             <form id="cariForm" class="space-y-3">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">Ad Soyad / Firma Adı</label>
-                    <input type="text" id="unvan" required class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Ad Soyad / Firma Adı</label>
+                    <input type="text" id="unvan" required placeholder="Örn: Ahmet Yılmaz" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-sm font-medium text-gray-600">Telefon</label>
-                        <input type="tel" id="telefon" class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Telefon</label>
+                        <input type="tel" id="telefon" placeholder="05XX XXX XX XX" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-600">Bakiye (TL)</label>
-                        <input type="number" step="0.01" id="bakiye" placeholder="0.00" class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Açılış Bakiyesi (TL)</label>
+                        <input type="number" step="0.01" id="bakiye" placeholder="0.00" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200">
-                    Cari Kaydet
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition text-sm shadow">
+                    Müşteriyi Kaydet
                 </button>
             </form>
         </section>
 
         <!-- Cari Liste -->
-        <section class="bg-white p-4 rounded-lg shadow-md">
-            <div class="flex justify-between items-center mb-3 border-b pb-2">
-                <h2 class="text-lg font-semibold text-gray-700">Cari Listesi</h2>
-                <span id="toplamCari" class="text-sm font-medium text-gray-500">Toplam: 0</span>
+        <section class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b">
+                <h2 class="text-base font-semibold text-gray-700 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-blue-600"></i> Müşteri Listesi
+                </h2>
+                <span id="toplamCari" class="text-xs font-semibold bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">Toplam: 0</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-50 text-gray-600 text-sm">
-                            <th class="p-2 border-b">Ünvan / Ad</th>
-                            <th class="p-2 border-b">Telefon</th>
-                            <th class="p-2 border-b">Bakiye</th>
-                            <th class="p-2 border-b text-center">İşlem</th>
+                        <tr class="bg-gray-50 text-gray-500 text-xs">
+                            <th class="p-3 border-b">Müşteri Adı</th>
+                            <th class="p-3 border-b">Telefon</th>
+                            <th class="p-3 border-b">Güncel Bakiye</th>
+                            <th class="p-3 border-b text-center">İşlem</th>
                         </tr>
                     </thead>
                     <tbody id="cariListesi" class="divide-y text-sm">
-                        <!-- Veriler JS ile dinamik eklenecek -->
+                        <!-- JS ile doldurulacak -->
                     </tbody>
                 </table>
             </div>
@@ -71,62 +78,123 @@
 
     </main>
 
-    <script>
-        // LocalStorage Anahtarı
-        const STORAGE_KEY = 'turkalp_cari_listesi';
+    <!-- MÜŞTERİ DETAY MODAL (POPUPI) -->
+    <div id="detayModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 space-y-4 shadow-2xl">
+            
+            <!-- Modal Header -->
+            <div class="flex justify-between items-start border-b pb-3">
+                <div>
+                    <h3 id="modalUnvan" class="text-lg font-bold text-gray-800">Müşteri Detayı</h3>
+                    <p id="modalTelefon" class="text-xs text-gray-500">-</p>
+                </div>
+                <button onclick="modalKapat()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
 
-        // Sayfa Yüklendiğinde Verileri Al ve Listele
+            <!-- Bakiye Kartı -->
+            <div class="bg-gray-50 p-3 rounded-xl flex justify-between items-center border">
+                <span class="text-xs font-semibold text-gray-500">GÜNCEL BAKİYE:</span>
+                <span id="modalBakiye" class="text-lg font-extrabold text-blue-600">0.00 TL</span>
+            </div>
+
+            <!-- Yeni İşlem/Hareket Ekleme Formu -->
+            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 space-y-3">
+                <h4 class="text-xs font-bold text-blue-900 uppercase tracking-wider">Yeni Borç / Alacak (Ödeme) Ekle</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">İşlem Tipi</label>
+                        <select id="islemTipi" class="w-full p-2 border rounded-lg text-xs outline-none bg-white">
+                            <option value="borc">Borçlandır (+ Ekle)</option>
+                            <option value="alacak">Tahsilat / Ödeme (- Düş)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Tutar (TL)</label>
+                        <input type="number" step="0.01" id="islemTutar" placeholder="0.00" class="w-full p-2 border rounded-lg text-xs outline-none bg-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-1">Açıklama</label>
+                    <input type="text" id="islemAciklama" placeholder="Örn: Ürün satışı / Nakit ödeme" class="w-full p-2 border rounded-lg text-xs outline-none bg-white">
+                </div>
+                <button onclick="hareketEkle()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-xs transition shadow">
+                    İşlemi Kaydet
+                </button>
+            </div>
+
+            <!-- Geçmiş Hareketler -->
+            <div>
+                <h4 class="text-xs font-bold text-gray-700 mb-2 border-b pb-1">Hesap Hareket Geçmişi</h4>
+                <div class="overflow-x-auto max-h-48 overflow-y-auto border rounded-lg">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-100 text-gray-600 sticky top-0">
+                            <tr>
+                                <th class="p-2 border-b">Tarih</th>
+                                <th class="p-2 border-b">Açıklama</th>
+                                <th class="p-2 border-b">İşlem</th>
+                                <th class="p-2 border-b text-right">Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hareketListesi" class="divide-y">
+                            <!-- JS ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'turkalp_cari_v2';
+        let aktifCariId = null;
+
         document.addEventListener('DOMContentLoaded', carileriYukle);
 
-        const cariForm = document.getElementById('cariForm');
+        // Cari Getir
+        function carileriGetir() {
+            const veriler = localStorage.getItem(STORAGE_KEY);
+            return veriler ? JSON.parse(veriler) : [];
+        }
 
-        // Yeni Cari Ekleme
-        cariForm.addEventListener('submit', function(e) {
+        // Cari Kaydet
+        function carileriKaydet(cariler) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cariler));
+        }
+
+        // Yeni Müşteri Kaydı
+        document.getElementById('cariForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const unvan = document.getElementById('unvan').value.trim();
             const telefon = document.getElementById('telefon').value.trim();
             const bakiye = parseFloat(document.getElementById('bakiye').value) || 0;
 
             if (!unvan) return;
 
+            const cariler = carileriGetir();
             const yeniCari = {
                 id: Date.now(),
                 unvan: unvan,
                 telefon: telefon,
-                bakiye: bakiye
+                bakiye: bakiye,
+                hareketler: bakiye !== 0 ? [{
+                    tarih: new Date().toLocaleDateString('tr-TR'),
+                    aciklama: 'Açılış Bakiyesi',
+                    tip: bakiye > 0 ? 'borc' : 'alacak',
+                    tutar: Math.abs(bakiye)
+                }] : []
             };
 
-            const cariler = carileriGetir();
             cariler.push(yeniCari);
             carileriKaydet(cariler);
 
-            cariForm.reset();
+            this.reset();
             carileriYukle();
         });
 
-        // LocalStorage'dan Verileri Oku
-        function carileriGetir() {
-            const veriler = localStorage.getItem(STORAGE_KEY);
-            return veriler ? JSON.parse(veriler) : [];
-        }
-
-        // LocalStorage'a Verileri Kaydet
-        function carileriKaydet(cariler) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(cariler));
-        }
-
-        // Cari Silme İşlemi
-        function cariSil(id) {
-            if (confirm('Bu cariyi silmek istediğinize emin misiniz?')) {
-                let cariler = carileriGetir();
-                cariler = cariler.filter(c => c.id !== id);
-                carileriKaydet(cariler);
-                carileriYukle();
-            }
-        }
-
-        // Ekrana Verileri Yazdırma
+        // Müşteri Listesini Ekrana Yazma
         function carileriYukle() {
             const cariler = carileriGetir();
             const listeEl = document.getElementById('cariListesi');
@@ -136,27 +204,128 @@
             listeEl.innerHTML = '';
 
             if (cariler.length === 0) {
-                listeEl.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-gray-400">Henüz kayıtlı cari bulunmuyor.</td></tr>`;
+                listeEl.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-gray-400">Henüz müşteri bulunmuyor.</td></tr>`;
                 return;
             }
 
             cariler.forEach(cari => {
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-50';
+                tr.className = 'hover:bg-blue-50/50 cursor-pointer transition';
                 tr.innerHTML = `
-                    <td class="p-2 font-medium text-gray-800">${cari.unvan}</td>
-                    <td class="p-2 text-gray-600">${cari.telefon || '-'}</td>
-                    <td class="p-2 font-semibold ${cari.bakiye >= 0 ? 'text-green-600' : 'text-red-600'}">
+                    <td class="p-3 font-semibold text-gray-800" onclick="detayAc(${cari.id})">${cari.unvan}</td>
+                    <td class="p-3 text-gray-500" onclick="detayAc(${cari.id})">${cari.telefon || '-'}</td>
+                    <td class="p-3 font-bold ${cari.bakiye > 0 ? 'text-red-600' : (cari.bakiye < 0 ? 'text-green-600' : 'text-gray-500')}" onclick="detayAc(${cari.id})">
                         ${cari.bakiye.toFixed(2)} TL
                     </td>
-                    <td class="p-2 text-center">
-                        <button onclick="cariSil(${cari.id})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs transition">
-                            Sil
+                    <td class="p-3 text-center">
+                        <button onclick="cariSil(${cari.id})" class="text-red-500 hover:text-red-700 p-1">
+                            <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
                 `;
                 listeEl.appendChild(tr);
             });
+        }
+
+        // Müşteri Detay Modalı Açma
+        function detayAc(id) {
+            aktifCariId = id;
+            const cariler = carileriGetir();
+            const cari = cariler.find(c => c.id === id);
+            if (!cari) return;
+
+            document.getElementById('modalUnvan').textContent = cari.unvan;
+            document.getElementById('modalTelefon').textContent = cari.telefon || 'Telefon Yok';
+            
+            const bakiyeEl = document.getElementById('modalBakiye');
+            bakiyeEl.textContent = `${cari.bakiye.toFixed(2)} TL`;
+            bakiyeEl.className = `text-lg font-extrabold ${cari.bakiye > 0 ? 'text-red-600' : (cari.bakiye < 0 ? 'text-green-600' : 'text-gray-600')}`;
+
+            hareketleriYukle(cari.hareketler || []);
+            document.getElementById('detayModal').classList.remove('hidden');
+        }
+
+        function modalKapat() {
+            document.getElementById('detayModal').classList.add('hidden');
+            aktifCariId = null;
+        }
+
+        // Hareket/Ödeme Ekleme
+        function hareketEkle() {
+            if (!aktifCariId) return;
+
+            const tip = document.getElementById('islemTipi').value;
+            const tutar = parseFloat(document.getElementById('islemTutar').value) || 0;
+            const aciklama = document.getElementById('islemAciklama').value.trim() || (tip === 'borc' ? 'Borç Kaydı' : 'Tahsilat');
+
+            if (tutar <= 0) {
+                alert('Lütfen geçerli bir tutar girin!');
+                return;
+            }
+
+            const cariler = carileriGetir();
+            const cariIndex = cariler.findIndex(c => c.id === aktifCariId);
+
+            if (cariIndex !== -1) {
+                if (tip === 'borc') {
+                    cariler[cariIndex].bakiye += tutar;
+                } else {
+                    cariler[cariIndex].bakiye -= tutar;
+                }
+
+                if (!cariler[cariIndex].hareketler) cariler[cariIndex].hareketler = [];
+
+                cariler[cariIndex].hareketler.unshift({
+                    tarih: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour: '2-2', minute:'2-2'}),
+                    aciklama: aciklama,
+                    tip: tip,
+                    tutar: tutar
+                });
+
+                carileriKaydet(cariler);
+
+                document.getElementById('islemTutar').value = '';
+                document.getElementById('islemAciklama').value = '';
+
+                detayAc(aktifCariId);
+                carileriYukle();
+            }
+        }
+
+        // Hareket Tablosunu Doldurma
+        function hareketleriYukle(hareketler) {
+            const hListe = document.getElementById('hareketListesi');
+            hListe.innerHTML = '';
+
+            if (hareketler.length === 0) {
+                hListe.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-gray-400">İşlem geçmişi yok.</td></tr>`;
+                return;
+            }
+
+            hareketler.forEach(h => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 border-b text-gray-500">${h.tarih}</td>
+                    <td class="p-2 border-b font-medium text-gray-700">${h.aciklama}</td>
+                    <td class="p-2 border-b font-semibold ${h.tip === 'borc' ? 'text-red-600' : 'text-green-600'}">
+                        ${h.tip === 'borc' ? 'Borç' : 'Tahsilat'}
+                    </td>
+                    <td class="p-2 border-b text-right font-bold ${h.tip === 'borc' ? 'text-red-600' : 'text-green-600'}">
+                        ${h.tutar.toFixed(2)} TL
+                    </td>
+                `;
+                hListe.appendChild(tr);
+            });
+        }
+
+        // Müşteri Silme
+        function cariSil(id) {
+            if (confirm('Bu müşteriyi ve tüm hareket geçmişini silmek istediğinize emin misiniz?')) {
+                let cariler = carileriGetir();
+                cariler = cariler.filter(c => c.id !== id);
+                carileriKaydet(cariler);
+                carileriYukle();
+            }
         }
     </script>
 </body>
