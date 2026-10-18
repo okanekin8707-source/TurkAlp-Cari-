@@ -19,6 +19,10 @@
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
 
+        /* Logo Stilleri */
+        .header-container { display: flex; align-items: center; gap: 10px; }
+        .header-logo { height: 40px; width: auto; object-fit: contain; }
+
         .baslik-ust { color: #cc0000; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; line-height: 1.1; }
         .baslik-alt { color: #0066cc; font-size: 14px; margin-top: 2px; font-weight: bold; display: block; }
 
@@ -371,7 +375,10 @@
     <div id="sifreEkrani">
         <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
             <div style="margin-bottom: 15px;">
-                <h2 class="baslik-ust">TÜRKALP</h2>
+                <div class="header-container" style="justify-content: center; margin-bottom: 5px;">
+                    <img src="logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+                    <h2 class="baslik-ust">TÜRKALP</h2>
+                </div>
                 <span class="baslik-alt">Alacak - Verecek Takibi</span>
             </div>
             <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
@@ -383,9 +390,12 @@
     <!-- ANA UYGULAMA -->
     <div id="anaUygulama" style="display:none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <div>
-                <h2 class="baslik-ust">TÜRKALP</h2>
-                <span class="baslik-alt">Alacak - Verecek Takibi</span>
+            <div class="header-container">
+                <img src="logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+                <div>
+                    <h2 class="baslik-ust">TÜRKALP</h2>
+                    <span class="baslik-alt">Alacak - Verecek Takibi</span>
+                </div>
             </div>
             
             <!-- AÇILIR MENÜ ALANI -->
@@ -408,15 +418,4 @@
         <!-- MÜŞTERİ ARAMA KUTUSU -->
         <div class="box">
             <b>Müşteri Ara</b>
-            <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
-        </div>
-
-        <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
-
-        <!-- LİSTE -->
-        <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
-        <div id="listeContainer"></div>
-    </div>
-</body>
-    </html>
-    
+            <input type="text" id="aramaKutus
