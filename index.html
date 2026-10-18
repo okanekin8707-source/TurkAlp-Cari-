@@ -3,91 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TürkAlp Teknoloji</title>
+    <title>TürkAlp Teknoloji - Ön Muhasebe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .custom-shadow {
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-        .fab-shadow {
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 pb-24 select-none">
+<body class="bg-slate-100 text-slate-800 pb-20">
 
-    <!-- Üst Başlık / Header -->
-    <header class="bg-white px-4 py-3 flex justify-between items-center border-b border-slate-100 sticky top-0 z-20">
-        <div class="flex items-center gap-2">
-            <div class="text-blue-600 text-xl">
-                <i class="fa-solid fa-book-open"></i>
-            </div>
-            <h1 class="font-bold text-slate-800 text-base tracking-tight">TürkAlp Teknoloji</h1>
-        </div>
-        <div class="flex items-center gap-2">
-            <button class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-lg active:scale-95 transition">
-                <i class="fa-solid fa-arrows-rotate"></i>
-            </button>
-            <button class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-lg active:scale-95 transition">
-                <i class="fa-solid fa-bell-slash"></i>
-            </button>
-        </div>
+    <!-- Header -->
+    <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-20 flex justify-between items-center">
+        <h1 class="font-bold text-base flex items-center gap-2">
+            <i class="fa-solid fa-book-open"></i> TürkAlp Teknoloji
+        </h1>
+        <span class="text-xs bg-blue-700 px-2.5 py-1 rounded-lg">Ön Muhasebe</span>
     </header>
 
     <main class="p-4 max-w-md mx-auto space-y-4">
 
-        <!-- Müşteriler / Tedarikçiler Sekmeleri -->
-        <div class="bg-slate-100/80 p-1 rounded-2xl flex text-xs font-bold text-slate-400">
-            <button class="flex-1 py-3 rounded-xl bg-white text-blue-600 shadow-sm flex items-center justify-center gap-2 transition">
-                <i class="fa-solid fa-user text-sm"></i> MÜŞTERİLER
+        <!-- SEKME SEÇİMİ (MÜŞTERİLER / TOPTANCILAR) -->
+        <div class="bg-slate-200 p-1 rounded-xl flex text-xs font-bold">
+            <button type="button" id="btnMusteriTab" onclick="sekmeDegis('musteri')" class="flex-1 py-2.5 rounded-lg bg-white text-blue-600 shadow-sm transition">
+                <i class="fa-solid fa-users mr-1"></i> MÜŞTERİLER
             </button>
-            <button class="flex-1 py-3 rounded-xl flex items-center justify-center gap-2 hover:text-slate-600 transition">
-                <i class="fa-solid fa-truck text-sm"></i> TEDARİKÇİLER
+            <button type="button" id="btnToptanciTab" onclick="sekmeDegis('toptanci')" class="flex-1 py-2.5 rounded-lg text-slate-500 transition">
+                <i class="fa-solid fa-truck mr-1"></i> TOPTANCILAR
             </button>
         </div>
 
-        <!-- Özet Bakiye Kartı (Aldım / Verdim) -->
-        <div class="bg-white p-4 rounded-2xl border border-slate-100 custom-shadow flex justify-between items-center">
-            <div class="space-y-2">
-                <div>
-                    <span class="text-xs text-slate-400 font-semibold block">Aldım</span>
-                    <span id="ozetAldim" class="text-lg font-bold text-emerald-500">0.0 ₺</span>
-                </div>
-                <div>
-                    <span class="text-xs text-slate-400 font-semibold block">Verdim</span>
-                    <span id="ozetVerdim" class="text-lg font-bold text-rose-500">0.0 ₺</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <button onclick="alert('Tahsilat raporu yakında!')" class="flex flex-col items-center gap-1">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <span class="text-[10px] text-slate-400 font-medium">Tahsilat</span>
+        <!-- KAYIT EKLEME FORMU -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+            <h2 id="formBaslik" class="font-bold text-slate-700 text-sm border-b pb-2 flex justify-between items-center">
+                <span><i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Yeni Müşteri Ekle</span>
+                <button type="button" onclick="topluEkleToggle()" class="text-xs text-blue-600 font-normal hover:underline">
+                    Toplu Ekle
                 </button>
-                <button onclick="alert('Raporlar yakında!')" class="flex flex-col items-center gap-1">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-lg">
-                        <i class="fa-chart-column fa-solid"></i>
+            </h2>
+
+            <!-- Tekli Ekleme -->
+            <div id="tekliForm" class="space-y-2">
+                <div>
+                    <label id="etiketAd" class="block text-xs font-bold text-slate-600 mb-1">Müşteri / Firma Adı *</label>
+                    <input type="text" id="mAdInput" placeholder="Örn: Ahmet Yılmaz" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Telefon</label>
+                        <input type="tel" id="mTelInput" placeholder="05XX..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500">
                     </div>
-                    <span class="text-[10px] text-slate-400 font-medium">Raporlar</span>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Bakiyesi (₺)</label>
+                        <input type="number" step="0.01" id="mBakInput" placeholder="0.00" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <button type="button" onclick=" kayitEkle()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm shadow transition">
+                    + Kaydı Ekle
+                </button>
+            </div>
+
+            <!-- Toplu Ekleme Kutusu -->
+            <div id="topluForm" class="space-y-2 hidden">
+                <p class="text-xs text-slate-500">İsimleri alt alta yazarak tek seferde ekleyin:</p>
+                <textarea id="topluMetin" rows="4" placeholder="İsim 1&#10;İsim 2" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none"></textarea>
+                <button type="button" onclick="topluKaydet()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition">
+                    Toplu Kayıtları Ekle
                 </button>
             </div>
         </div>
 
-        <!-- Müşteri Arama & Filtre -->
-        <div class="space-y-3">
+        <!-- ÖZET BİLGİ -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center text-xs">
+            <div>
+                <span class="text-slate-400 font-semibold block">Toplam Borç (Verdim)</span>
+                <span id="toplamVerdim" class="text-base font-bold text-rose-500">0.0 ₺</span>
+            </div>
+            <div class="text-right">
+                <span class="text-slate-400 font-semibold block">Toplam Alacak (Aldım)</span>
+                <span id="toplamAldim" class="text-base font-bold text-emerald-500">0.0 ₺</span>
+            </div>
+        </div>
+
+        <!-- LİSTE VE ARAMA -->
+        <div class="space-y-2">
             <div class="flex justify-between items-center">
-                <h2 class="font-bold text-blue-600 text-base">Müşteriler <span id="toplamSayi" class="text-slate-400 font-normal">(0)</span></h2>
+                <h3 id="listeBaslik" class="font-bold text-slate-700 text-sm">Müşteriler <span id="sayac" class="text-slate-400 font-normal">(0)</span></h3>
+                <input type="text" id="aramaBox" oninput="listele()" placeholder="Ara..." class="p-1.5 px-3 bg-white border rounded-xl text-xs outline-none w-32">
             </div>
-            <div class="flex gap-2">
-                <div class="flex-1 bg-slate-100/70 rounded-2xl flex items-center px-4 py-3 gap-3">
-                    <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
-                    <input type="text" id="aramaInput" oninput="musteriAra()" placeholder="Arama" class="bg-transparent w-full text-sm outline-none placeholder:text-slate-400">
+
+            <div id="listeContainer" class="space-y-2">
+                <!-- Kayıtlar buraya gelecek -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- DETAY MODALI -->
+    <div id="detayModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-4 space-y-3 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-2">
+                <div>
+                    <h3 id="mAd" class="font-bold text-slate-800 text-base">Ad</h3>
+                    <p id="mTel" class="text-xs text-slate-400"></p>
                 </div>
-                <button class="w-12 h-
-                    
+                <button type="button" onclick="modalKapat()" class="text-slate-400 text-lg font-bold px-2">✕</button>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl text-center border">
+                <span class="text-[10px] text-slate-400 font-bold block">GÜNCEL BAKİYE</span>
+                <span id="mBakiye" class="text-xl font-extrabold text-blue-600">0.0 ₺</span>
+            </div>
+
+            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 space-y-2">
+                <h4 class="text-xs font-bold text-blue-900">İŞLEM EKLE</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="iTip" class="p-2 bg-white border rounded-lg text-xs outline-none">
+                        <option value="verdim">Verdim / Borç (+)</option>
+                        <option value="aldim">Aldım / Ödeme (-)</option>
+                    </select>
+                    <input type="number" step="0.01" id="iTutar" placeholder="Tutar (₺)" class="p-2 bg-white border rounded-lg text-xs outline-none">
+                </div>
+                <input type="text" id="iAciklama" placeholder="Açıklama" class="w-full p-2 bg-white border rounded-lg text-xs outline-none">
+                <button type="button" onclick="islemEkle()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition">
+                    İşlemi Kaydet
+                </button>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold text-slate-700 mb-1">Hesap Geçmişi</h4>
+                <div id="mHareketler" class="space-y-1 max-h-36 overflow-y-auto pr-1"></div>
+            </div>
+
+            <div class="border-t pt-2 text-right">
+                <button type="button" onclick="kayitSil()" class="text-rose-600 text-xs font-bold">Kaydı Sil</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const KEY = 'turkalp_muhasebe_v2';
+        let aktifSekme = 'musteri'; // 'musteri' veya 'toptanci'
+        let aktifId = null;
+
+        document.addEventListener('DOMContentLoaded', listele);
+
+        function veriOku() {
+            const d = localStorage.getItem(KEY);
+            return d ? JSON.parse(d) : { musteri: [], toptanci: [] };
+        }
+
+        function veriYaz(data) {
+            localStorage.setItem(KEY, JSON.stringify(data));
+        }
+
+        function sekmeDegis(sekme) {
+            aktifSekme = sekme;
+            const mTab = document.getElementById('btnMusteriTab');
+            const tTab = document.getElementById('btnToptanciTab');
+            const formBaslik = document.getElementById('formBaslik');
+            const etiketAd = document.getElementById('etiketAd');
+            const listeBaslik = document.getElementById('listeBaslik');
+
+            if (sekme === 'musteri') {
+                mTab.className = "flex-1 py-2.5 rounded-lg bg-white text-blue-600 shadow-sm transition";
+                tTab.className = "flex-1 py-2.5 rounded-lg text-slate-500 transition";
+                formBaslik.querySelector('span').innerHTML = '<i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Yeni Müşteri Ekle';
+                etiketAd.textContent = 'Müşteri / Firma Adı *';
+                listeBaslik.innerHTML = 'Müşteriler <span id="sayac" class="text-slate-400 font-normal">(0)</span>';
+            } else {
+                tTab.className = "flex-1 py-2.5 rounded-lg bg-white text-blue-600 shadow-sm transition";
+                mTab.className = "flex-1 py-2.5 rounded-lg text-slate-500 transition";
+                formBaslik.querySelector('span').innerHTML = '<i class="fa-solid fa-truck-field text-blue-600 mr-1"></i> Yeni Toptancı Ekle';
+                etiketAd.textContent = 'Toptancı / Firma Adı *';
+                listeBaslik.innerHTML = 'Toptancılar <span id="sayac" class="text-slate-400 font-normal">(0)</span>';
+            }
+            listele();
+        }
+
+        function topluEkleToggle() {
+            document.getElementById('tekliForm').classList.toggle('hidden');
+            document.getElementById('topluForm').classList.toggle('hidden');
+        }
+
+        function kayitEkle() {
+            const ad = document.getElementById('mAdInput').value.trim();
+            const tel = document.getElementById('mTelInput').value.trim();
+            const bak = parseFloat(document.getElementById('mBakInput').value) || 0;
+
+            if (!ad) {
+                alert('Lütfen isim yazın.');
+                return;
+            }
+
+            const db = veriOku();
+            db[aktifSekme].unshift({
+                id: Date.now(),
+                unvan: ad,
+                telefon: tel,
+                bakiye: bak,
+                hareketler: bak !== 0 ? [{ tarih: new Date().toLocaleDateString('tr-TR'), aciklama: 'Açılış', tip: bak > 0 ? 'verdim' : 'aldim', tutar: Math.abs(bak) }] : []
+            });
+
+            veriYaz(db);
+            document.getElementById('mAdInput').value = '';
+            document.getElementById('mTelInput').value = '';
+            document.getElementById('mBakInput').value = '';
+            listele();
+        }
+
+        function topluKaydet() {
+            const metin = document.getElementById('topluMetin').value.trim();
+            if (!metin) return;
+
+            const db = veriOku();
+            metin.split('\n').forEach((isim, i) => {
+                const temiz = isim.trim();
+                if (temiz) {
+                    db[aktifSekme].unshift({
+                        id: Date.now() + i,
+                        unvan: temiz,
+                        telefon: '',
+                        bakiye: 0,
+                        hareketler: []
+                    });
+                }
+            });
+
+            veriYaz(db);
+            document.getElementById('topluMetin').value = '';
+            topluEkleToggle();
+            listele();
+        }
+
+        function listele() {
+            const db = veriOku();
+            const liste = db[aktifSekme] || [];
+            const arama = document.getElementById('aramaBox').value.toLowerCase();
+            const container = document.getElementById('listeContainer');
+            container.innerHTML = '';
+
+            let vSum = 0, aSum = 0;
+            const filtrelenmis = liste.filter(item => item.unvan.toLowerCase().includes(arama));
+            document.getElementById('sayac').textContent = `(${filtrelenmis.length})`;
+
+            if (filtrelenmis.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">Kayıt bulunmuyor.</div>`;
+            }
+
+            filtrelenmis.forEach(item => {
+                const b = Number(item.bakiye);
+                if (b > 0) vSum += b;
+                if (b < 0) aSum += Math.abs(b);
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-blue-50/50 transition";
+                card.onclick = () => detayAc(item.id);
+
+                card.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">${item.unvan}</h4>
+                        <p class="text-xs text-slate-400">${item.telefon || 'Telefon yok'}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-sm block ${b > 0 ? 'text-rose-500' : (b < 0 ? 'text-emerald-500' : 'text-slate-400')}">
+                            ${Math.abs(b).toFixed(1)} ₺
+                        </span>
+                        <span class="text-[10px] text-slate-400">${b > 0 ? 'Borç (Verdim)' : (b < 0 ? 'Alacak (Aldım)' : 'Dengede')}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('toplamVerdim').textContent = `${vSum.toFixed(1)} ₺`;
+            document.getElementById('toplamAldim').textContent = `${aSum.toFixed(1)} ₺`;
+        }
+
+        function detayAc(id) {
+            aktifId = id;
+            const db = veriOku();
+            const item = db[aktifSekme].find(m => m.id === id);
+            if (!item) return;
+
+            document.getElementById('mAd').textContent = item.unvan;
+            document.getElementById('mTel').textContent = item.telefon || 'Telefon yok';
+
+            const b = Number(item.bakiye);
+            const bEl = document.getElementById('mBakiye');
+            bEl.textContent = `${Math.abs(b).toFixed(1)} ₺`;
+            bEl.className = `text-xl font-extrabold ${b > 0 ? 'text-rose-500' : (b < 0 ? 'text-emerald-500' : 'text-slate-400')}`;
+
+            hareketYaz(item.hareketler || []);
+            document.getElementById('detayModal').classList.remove('hidden');
+        }
+
+        function modalKapat() { document.getElementById('detayModal').classList.add('hidden'); aktifId = null; }
+
+        function islemEkle() {
+            if (!aktifId) return;
+            const tip = document.getElementById('iTip').value;
+            const tutar = parseFloat(document.getElementById('iTutar').value) || 0;
+            const aciklama = document.getElementById('iAciklama').value.trim() || (tip === 'verdim' ? 'Borç' : 'Ödeme');
+
+            if (tutar <= 0) { alert('Lütfen tutar girin.'); return; }
+
+            const db = veriOku();
+            const idx = db[aktifSekme].findIndex(m => m.id === aktifId);
+
+            if (idx !== -1) {
+                let current = Number(db[aktifSekme][idx].bakiye) || 0;
+                if (tip === 'verdim') current += tutar;
+                else current -= tutar;
+
+                db[aktifSekme][idx].bakiye = current;
+                if (!db[aktifSekme][idx].hareketler) db[aktifSekme][idx].hareketler = [];
+                db[aktifSekme][idx].hareketler.unshift({
+                    tarih: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour:'2-2', minute:'2-2'}),
+                    aciklama: aciklama,
+                    tip: tip,
+                    tutar: tutar
+                });
+
+                veriYaz(db);
+                document.getElementById('iTutar').value = '';
+                document.getElementById('iAciklama').value = '';
+                detayAc(aktifId);
+                listele();
+            }
+        }
+
+        function hareketYaz(list) {
+            const box = document.getElementById('mHareketler');
+            box.innerHTML = '';
+            if (list.length === 0) { box.innerHTML = `<div class="text-xs text-slate-400 text-center py-2">Geçmiş işlem yok.</div>`; return; }
+
+            list.forEach(h => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-50 p-2 rounded-lg border flex justify-between items-center text-xs";
+                div.innerHTML = `
+                    <div>
+                        <span class="font-bold text-slate-700 block">${h.aciklama}</span>
+                        <span class="text-[10px] text-slate-400">${h.tarih}</span>
+                    </div>
+                    <span class="font-bold ${h.tip === 'verdim' ? 'text-rose-500' : 'text-emerald-500'}">
+                        ${h.tip === 'verdim' ? '+' : '-'}${Number(h.tutar).toFixed(1)} ₺
+                    </span>
+                `;
+                box.appendChild(div);
+            });
+        }
+
+        function kayitSil() {
+            if (confirm('Bu kaydı silmek istediğinize emin misiniz?')) {
+                let db = veriOku();
+                db[aktifSekme] = db[aktifSekme].filter(m => m.id !== aktifId);
+                veriYaz(db);
+                modalKapat();
+                listele();
+            }
+        }
+    </script>
+</body>
+</html>
