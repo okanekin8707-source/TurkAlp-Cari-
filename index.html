@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TürkAlp Teknoloji - Müşteri Takip v19</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip v20</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
@@ -18,7 +18,7 @@
 </head>
 <body>
 
-    <h2 style="text-align:center; color:#0066cc; margin-bottom:10px;">TürkAlp Müşteri Takip v19</h2>
+    <h2 style="text-align:center; color:#0066cc; margin-bottom:10px;">TürkAlp Müşteri Takip v20</h2>
 
     <!-- YENİ MÜŞTERİ EKLEME -->
     <div class="box">
@@ -35,19 +35,23 @@
         <button onclick="kaydet()">Müşteriyi Kaydet</button>
     </div>
 
+    <!-- MÜŞTERİ ARAMA KUTUSU -->
+    <div class="box">
+        <b>Müşteri Ara</b>
+        <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
+    </div>
+
     <!-- LİSTE -->
     <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
     <div id="listeContainer"></div>
 
     <script>
-        // Verileri hafızadan oku
         function verileriAl() {
             var veri = localStorage.getItem('turkalp_v19_db');
             if (!veri) return [];
             try { return JSON.parse(veri); } catch(e) { return []; }
         }
 
-        // Verileri hafızaya yaz
         function verileriYaz(arr) {
             localStorage.setItem('turkalp_v19_db', JSON.stringify(arr));
         }
@@ -86,7 +90,6 @@
             liste.unshift(yeniMusteri);
             verileriYaz(liste);
 
-            // Kutuları temizle
             adInput.value = "";
             telInput.value = "";
             bakInput.value = "";
@@ -97,16 +100,23 @@
 
         function listeyiEkranaBas() {
             var liste = verileriAl();
+            var aramaMetni = document.getElementById('aramaKutusu').value.toLowerCase().trim();
             var container = document.getElementById('listeContainer');
             container.innerHTML = "";
-            document.getElementById('sayac').textContent = liste.length;
 
-            if (liste.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:#777; padding:10px;">Kayıtlı müşteri bulunmuyor.</div>';
+            // Arama filtresi uygula
+            var filtrelenmisListe = liste.filter(function(m) {
+                return m.ad.toLowerCase().includes(aramaMetni);
+            });
+
+            document.getElementById('sayac').textContent = filtrelenmisListe.length;
+
+            if (filtrelenmisListe.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#777; padding:10px;">Kayıtlı müşteri bulunamadı.</div>';
                 return;
             }
 
-            liste.forEach(function(m) {
+            filtrelenmisListe.forEach(function(m) {
                 var bakiye = Number(m.bakiye) || 0;
                 var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
                 var durumMetni = bakiye > 0 ? 'Borçlu (Sana)' : (bakiye < 0 ? 'Alacaklı (Senden)' : 'Dengede');
@@ -125,7 +135,6 @@
                     '</div>' +
                 '</div>';
 
-                // Eğer bu müşteri seçildiyse alt paneli aç
                 if (String(m.id) === String(seciliMusteriId)) {
                     icerik += '<div class="panel">' +
                         '<b>İşlem / Malzeme Ekle</b><br>' +
@@ -229,7 +238,6 @@
             }
         }
 
-        // Sayfa açıldığında listeyi çalıştır
         window.onload = function() {
             listeyiEkranaBas();
         };
