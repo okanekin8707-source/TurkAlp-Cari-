@@ -2,190 +2,237 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TürkAlp Teknoloji - Müşteri Takip v18</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TürkAlp Teknoloji - Müşteri Takip v19</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #f1f5f9; color: #0f172a; padding: 12px; padding-bottom: 50px; }
-        .header { background: #1d4ed8; color: white; padding: 12px 16px; border-radius: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .card { background: white; padding: 14px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .card-title { font-size: 13px; font-weight: bold; color: #334155; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; }
-        .form-row { margin-bottom: 8px; }
-        label { font-size: 11px; font-weight: bold; color: #64748b; display: block; margin-bottom: 2px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #f8fafc; outline: none; }
-        .btn-add { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; width: 100%; cursor: pointer; }
-        .btn-action { background: #059669; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px; width: 100%; cursor: pointer; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .summary-box { display: flex; justify-content: space-between; background: #fff; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px; font-size: 12px; }
-        .val-red { color: #e11d48; font-weight: bold; font-size: 14px; }
-        .val-green { color: #059669; font-weight: bold; font-size: 14px; }
-        .kisi-card { background: white; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 8px; cursor: pointer; }
-        .kisi-card.active { border: 2px solid #2563eb; background: #eff6ff; }
-        .panel { background: #e0f2fe; border: 1px solid #bae6fd; padding: 12px; border-radius: 12px; margin-top: 10px; }
-        .history-item { background: white; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0; margin-top: 4px; font-size: 11px; display: flex; justify-content: space-between; }
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
+        .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
+        input, select { width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 8px; box-sizing: border-box; border: 1px solid #aaa; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .kisi { background: white; padding: 10px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #ddd; cursor: pointer; }
+        .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
+        .history { background: white; padding: 6px; border-radius: 4px; margin-top: 4px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; }
+        .red { color: #cc0000; font-weight: bold; }
+        .green { color: #009933; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div>TürkAlp Teknoloji</div>
-        <div style="font-size: 11px; background: #1e40af; padding: 2px 6px; border-radius: 4px;">v18</div>
-    </div>
+    <h2 style="text-align:center; color:#0066cc; margin-bottom:10px;">TürkAlp Müşteri Takip v19</h2>
 
-    <!-- MÜŞTERİ EKLE -->
-    <div class="card">
-        <div class="card-title">Yeni Müşteri Ekle</div>
-        <div class="form-row">
-            <label>Müşteri / Firma Adı *</label>
-            <input type="text" id="mAd" placeholder="Örn: Ahmet Yılmaz">
-        </div>
-        <div class="grid-2 form-row">
-            <div>
-                <label>Telefon</label>
-                <input type="tel" id="mTel" placeholder="05XX...">
-            </div>
-            <div>
-                <label>Açılış Bakiyesi (₺)</label>
-                <input type="number" step="0.01" id="mBak" placeholder="0.00">
-            </div>
-        </div>
-        <button type="button" class="btn-add" id="btnMusteriEkle">+ Müşteriyi Kaydet</button>
-    </div>
-
-    <!-- ÖZET -->
-    <div class="summary-box">
-        <div>
-            <span style="color:#64748b; font-weight:bold; display:block;">Müşteri Borçları (Alacağın)</span>
-            <span class="val-red" id="topAlacak">0.00 ₺</span>
-        </div>
-        <div style="text-align: right;">
-            <span style="color:#64748b; font-weight:bold; display:block;">Müşteri Alacakları (Borcun)</span>
-            <span class="val-green" id="topBorc">0.00 ₺</span>
-        </div>
+    <!-- YENİ MÜŞTERİ EKLEME -->
+    <div class="box">
+        <b>Yeni Müşteri Ekle</b>
+        <label>Müşteri Adı:</label>
+        <input type="text" id="yeniAd" placeholder="Örn: Ahmet Yılmaz">
+        
+        <label>Telefon:</label>
+        <input type="text" id="yeniTel" placeholder="05XX...">
+        
+        <label>Açılış Bakiyesi (₺):</label>
+        <input type="number" step="0.01" id="yeniBak" placeholder="0.00">
+        
+        <button onclick="kaydet()">Müşteriyi Kaydet</button>
     </div>
 
     <!-- LİSTE -->
-    <div style="margin-bottom: 8px; font-weight: bold; font-size: 13px; color: #475569;">
-        Müşteri Listesi <span id="sayac">(0)</span>
-    </div>
-    <div id="liste"></div>
+    <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
+    <div id="listeContainer"></div>
 
     <script>
-        var KEY = 'turkalp_v18_db';
-        var seciliId = null;
-
-        window.onload = function() {
-            document.getElementById('btnMusteriEkle').onclick = musteriEkle;
-            listele();
-        };
-
-        function oku() {
-            var d = localStorage.getItem(KEY);
-            if (!d) return [];
-            try { return JSON.parse(d); } catch(e) { return []; }
+        // Verileri hafızadan oku
+        function verileriAl() {
+            var veri = localStorage.getItem('turkalp_v19_db');
+            if (!veri) return [];
+            try { return JSON.parse(veri); } catch(e) { return []; }
         }
 
-        function yaz(d) {
-            localStorage.setItem(KEY, JSON.stringify(d));
+        // Verileri hafızaya yaz
+        function verileriYaz(arr) {
+            localStorage.setItem('turkalp_v19_db', JSON.stringify(arr));
         }
 
-        function musteriEkle() {
-            var ad = document.getElementById('mAd').value.trim();
-            var tel = document.getElementById('mTel').value.trim();
-            var bak = parseFloat(document.getElementById('mBak').value) || 0;
+        var seciliMusteriId = null;
 
-            if (!ad) {
-                alert('Lütfen müşteri adını girin.');
+        function kaydet() {
+            var adInput = document.getElementById('yeniAd');
+            var telInput = document.getElementById('yeniTel');
+            var bakInput = document.getElementById('yeniBak');
+
+            var ad = adInput.value.trim();
+            var tel = telInput.value.trim();
+            var bak = parseFloat(bakInput.value) || 0;
+
+            if (ad === "") {
+                alert("Lütfen müşteri adını yazınız!");
                 return;
             }
 
-            var db = oku();
-            db.unshift({
+            var liste = verileriAl();
+            
+            var yeniMusteri = {
                 id: 'm_' + Date.now(),
                 ad: ad,
                 tel: tel,
                 bakiye: bak,
                 hareketler: bak !== 0 ? [{
-                    tarih: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour:'2-2', minute:'2-2'}),
+                    tarih: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
                     aciklama: 'Açılış Bakiyesi',
                     tip: bak > 0 ? 'verdim' : 'aldim',
                     tutar: Math.abs(bak)
                 }] : []
-            });
+            };
 
-            yaz(db);
-            document.getElementById('mAd').value = '';
-            document.getElementById('mTel').value = '';
-            document.getElementById('mBak').value = '';
-            listele();
+            liste.unshift(yeniMusteri);
+            verileriYaz(liste);
+
+            // Kutuları temizle
+            adInput.value = "";
+            telInput.value = "";
+            bakInput.value = "";
+
+            listeyiEkranaBas();
+            alert("Müşteri başarıyla eklendi!");
         }
 
-        function listele() {
-            var db = oku();
-            var container = document.getElementById('liste');
-            container.innerHTML = '';
+        function listeyiEkranaBas() {
+            var liste = verileriAl();
+            var container = document.getElementById('listeContainer');
+            container.innerHTML = "";
+            document.getElementById('sayac').textContent = liste.length;
 
-            var sumAlacak = 0;
-            var sumBorc = 0;
-
-            document.getElementById('sayac').textContent = '(' + db.length + ')';
-
-            if (db.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:#94a3b8; font-size:12px; padding:20px; background:white; border-radius:10px;">Henüz müşteri yok.</div>';
+            if (liste.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#777; padding:10px;">Kayıtlı müşteri bulunmuyor.</div>';
+                return;
             }
 
-            db.forEach(function(m) {
-                var b = Number(m.bakiye) || 0;
-                if (b > 0) sumAlacak += b;
-                if (b < 0) sumBorc += Math.abs(b);
+            liste.forEach(function(m) {
+                var bakiye = Number(m.bakiye) || 0;
+                var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
+                var durumMetni = bakiye > 0 ? 'Borçlu (Sana)' : (bakiye < 0 ? 'Alacaklı (Senden)' : 'Dengede');
 
-                var isSecili = String(m.id) === String(seciliId);
                 var div = document.createElement('div');
-                div.className = 'kisi-card' + (isSecili ? ' active' : '');
-
-                var renk = b > 0 ? '#e11d48' : (b < 0 ? '#059669' : '#64748b');
-                var durum = b > 0 ? 'Borçlu (Sana)' : (b < 0 ? 'Alacaklı (Senden)' : 'Dengede');
-
-                var html = '<div onclick="sec(' + "'" + m.id + "'" + ')" style="display:flex; justify-between; align-items:center;">' +
+                div.className = 'kisi';
+                
+                var icerik = '<div onclick="sec(\'' + m.id + '\')" style="display:flex; justify-content:space-between; align-items:center;">' +
                     '<div>' +
-                        '<div style="font-weight:bold; font-size:14px;">' + m.ad + '</div>' +
-                        '<div style="font-size:11px; color:#94a3b8;">' + (m.tel || 'Telefon yok') + '</div>' +
+                        '<b style="font-size:15px;">' + m.ad + '</b><br>' +
+                        '<span style="font-size:12px; color:#666;">' + (m.tel || 'Telefon yok') + '</span>' +
                     '</div>' +
                     '<div style="text-align:right;">' +
-                        '<div style="font-weight:extrabold; font-size:14px; color:' + renk + ';">' + Math.abs(b).toFixed(2) + ' ₺</div>' +
-                        '<div style="font-size:10px; font-weight:bold; color:' + renk + ';">' + durum + '</div>' +
+                        '<span class="' + renk + '" style="font-size:15px;">' + Math.abs(bakiye).toFixed(2) + ' ₺</span><br>' +
+                        '<span style="font-size:11px;" class="' + renk + '">' + durumMetni + '</span>' +
                     '</div>' +
                 '</div>';
 
-                // Eğer kişi seçildiyse doğrudan kartın altına işlem panelini aç
-                if (isSecili) {
-                    html += '<div class="panel">' +
-                        '<div style="font-weight:bold; font-size:12px; color:#1e40af; margin-bottom:6px;">İŞLEM / MALZEME EKLE</div>' +
-                        '<div class="grid-2 form-row">' +
-                            '<div>' +
-                                '<label>İşlem Türü</label>' +
-                                '<select id="iTip">' +
-                                    '<option value="verdim">Mal/Borç Verdim (+ Artırır)</option>' +
-                                    '<option value="aldim">Para/Tahsilat Aldım (- Düşer)</option>' +
-                                '</select>' +
-                            '</div>' +
-                            '<div>' +
-                                '<label>Tutar (₺)</label>' +
-                                '<input type="number" step="0.01" id="iTutar" placeholder="0.00">' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="form-row">' +
-                            '<label>Açıklama / Ürün</label>' +
-                            '<input type="text" id="iAciklama" placeholder="Örn: Malzeme Bedeli / Ödeme">' +
-                        '</div>' +
-                        '<button type="button" class="btn-action" onclick="islemEkle(' + "'" + m.id + "'" + ')">İşlemi Kaydet ve Hesapla</button>' +
+                // Eğer bu müşteri seçildiyse alt paneli aç
+                if (String(m.id) === String(seciliMusteriId)) {
+                    icerik += '<div class="panel">' +
+                        '<b>İşlem / Malzeme Ekle</b><br>' +
+                        '<label>İşlem Türü:</label>' +
+                        '<select id="islemTip_' + m.id + '">' +
+                            '<option value="verdim">Mal/Borç Verdim (+ Artırır)</option>' +
+                            '<option value="aldim">Para/Tahsilat Aldım (- Düşer)</option>' +
+                        '</select>' +
+                        '<label>Tutar (₺):</label>' +
+                        '<input type="number" step="0.01" id="islemTutar_' + m.id + '" placeholder="0.00">' +
+                        '<label>Açıklama:</label>' +
+                        '<input type="text" id="islemAciklama_' + m.id + '" placeholder="Örn: Nakit / Malzeme">' +
+                        '<button onclick="islemYap(\'' + m.id + '\')" style="background:#009933;">İşlemi Kaydet ve Hesapla</button>' +
                         
-                        '<div style="margin-top:10px; border-top:1px solid #cbd5e1; padding-top:6px;">' +
-                            '<div style="font-weight:bold; font-size:11px; color:#475569;">Hesap Geçmişi:</div>';
-                            
-                            if (m.hareketler && m.hareketler.length > 0) {
-                                m.hareketler.forEach(function(h) {
-                                    var hRenk = h.tip === 'verdim' ? '#e11d48' : '#059669';
-                                    html += '<div class="history-item">' +
-                                        '<div><b>' + h.aciklama + '</b> <span style="color:#94a3b8;">(' + h.tarih + ')</span></div>'
-        
+                        '<hr style="margin:10px 0; border:0; border-top:1px solid #ccc;">' +
+                        '<b>Hesap Geçmişi:</b>';
+
+                    if (m.hareketler && m.hareketler.length > 0) {
+                        m.hareketler.forEach(function(h) {
+                            var hRenk = h.tip === 'verdim' ? 'red' : 'green';
+                            icerik += '<div class="history">' +
+                                '<span><b>' + h.aciklama + '</b> <small>(' + h.tarih + ')</small></span>' +
+                                '<span class="' + hRenk + '">' + (h.tip === 'verdim' ? '+' : '-') + Number(h.tutar).toFixed(2) + ' ₺</span>' +
+                            '</div>';
+                        });
+                    } else {
+                        icerik += '<div style="font-size:12px; color:#777; margin-top:4px;">İşlem geçmişi yok.</div>';
+                    }
+
+                    icerik += '<div style="text-align:right; margin-top:8px;">' +
+                        '<button onclick="musteriSil(\'' + m.id + '\')" style="width:auto; padding:6px 12px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
+                    '</div>';
+
+                    icerik += '</div>';
+                }
+
+                div.innerHTML = icerik;
+                container.appendChild(div);
+            });
+        }
+
+        function sec(id) {
+            if (seciliMusteriId === id) {
+                seciliMusteriId = null;
+            } else {
+                seciliMusteriId = id;
+            }
+            listeyiEkranaBas();
+        }
+
+        function islemYap(id) {
+            var tip = document.getElementById('islemTip_' + id).value;
+            var tutarVal = document.getElementById('islemTutar_' + id).value;
+            var aciklamaVal = document.getElementById('islemAciklama_' + id).value.trim();
+
+            var tutar = parseFloat(tutarVal);
+            if (isNaN(tutar) || tutar <= 0) {
+                alert("Lütfen geçerli bir tutar giriniz!");
+                return;
+            }
+
+            if (!aciklamaVal) {
+                aciklamaVal = tip === 'verdim' ? 'Mal/Borç Verildi' : 'Tahsilat Alındı';
+            }
+
+            var liste = verileriAl();
+            var index = liste.findIndex(function(x) { return String(x.id) === String(id); });
+
+            if (index !== -1) {
+                var mevcutBakiye = Number(liste[index].bakiye) || 0;
+
+                if (tip === 'verdim') {
+                    mevcutBakiye += tutar;
+                } else {
+                    mevcutBakiye -= tutar;
+                }
+
+                liste[index].bakiye = mevcutBakiye;
+                if (!liste[index].hareketler) liste[index].hareketler = [];
+
+                liste[index].hareketler.unshift({
+                    tarih: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+                    aciklama: aciklamaVal,
+                    tip: tip,
+                    tutar: tutar
+                });
+
+                verileriYaz(liste);
+                listeyiEkranaBas();
+                alert("İşlem başarıyla kaydedildi!");
+            }
+        }
+
+        function musteriSil(id) {
+            if (confirm("Bu müşteriyi silmek istediğinize emin misiniz?")) {
+                var liste = verileriAl();
+                liste = liste.filter(function(x) { return String(x.id) !== String(id); });
+                verileriYaz(liste);
+                seciliMusteriId = null;
+                listeyiEkranaBas();
+            }
+        }
+
+        // Sayfa açıldığında listeyi çalıştır
+        window.onload = function() {
+            listeyiEkranaBas();
+        };
+    </script>
+</body>
+</html>
