@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TürkAlp Teknoloji - Müşteri Takip v16</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip v17</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,7 +20,7 @@
             <i class="fa-solid fa-users text-xl"></i>
             <div>
                 <h1 class="font-bold text-sm leading-tight">TürkAlp Teknoloji</h1>
-                <span class="text-[10px] text-blue-200 font-bold bg-blue-800 px-1.5 py-0.5 rounded">Versiyon 16 (v16)</span>
+                <span class="text-[10px] text-blue-200 font-bold bg-blue-800 px-1.5 py-0.5 rounded">Versiyon 17 (v17)</span>
             </div>
         </div>
         <button type="button" onclick="yedekIndir()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-2.5 py-1.5 rounded-lg border border-blue-500 transition" title="Yedek Al">
@@ -33,7 +33,7 @@
         <!-- YENİ MÜŞTERİ EKLEME KARTI -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
             <h2 class="font-bold text-slate-700 text-sm flex items-center gap-1.5 border-b pb-2">
-                <i class="fa-solid fa-user-plus text-blue-600"></i> Yeni Müşteri Ekle (v16)
+                <i class="fa-solid fa-user-plus text-blue-600"></i> Yeni Müşteri Ekle (v17)
             </h2>
 
             <form onsubmit="musteriEkle(event)" class="space-y-3">
@@ -104,8 +104,9 @@
                 <span id="mdlDurum" class="text-xs font-semibold block">Dengede</span>
             </div>
 
-            <!-- İşlem Ekleme Paneli -->
-            <div class="bg-blue-50 p-3.5 rounded-2xl border border-blue-100 space-y-3">
+            <!-- İşlem Ekleme Formu (Form submit garantili) -->
+            <form onsubmit="islemKaydetForm(event)" class="bg-blue-50 p-3.5 rounded-2xl border border-blue-100 space-y-3">
+                <input type="hidden" id="mdlMusteriId">
                 <h4 class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
                     <i class="fa-solid fa-file-invoice-dollar text-blue-600"></i> İŞLEM / MALZEME EKLE
                 </h4>
@@ -119,17 +120,17 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Tutar (₺)</label>
-                        <input type="number" step="0.01" id="islemTutar" placeholder="0.00" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs outline-none">
+                        <input type="number" step="0.01" id="islemTutar" required placeholder="0.00" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs outline-none">
                     </div>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Açıklama / Ürün</label>
                     <input type="text" id="islemAciklama" placeholder="Örn: 5000 TL Tahsilat / Servis Bedeli" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs outline-none">
                 </div>
-                <button type="button" onclick="islemKaydetTikla()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-check"></i> İşlemi Kaydet ve Hesapla
                 </button>
-            </div>
+            </form>
 
             <div>
                 <h4 class="text-xs font-bold text-slate-700 mb-2">Hesap Geçmişi</h4>
@@ -148,10 +149,9 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT KODU (v16) -->
+    <!-- JAVASCRIPT KODU (v17) -->
     <script>
-        const KEY = 'turkalp_sade_musteri_db_v16';
-        let seciliId = null;
+        const KEY = 'turkalp_sade_musteri_db_v17';
 
         window.onload = function() {
             listele();
@@ -242,9 +242,11 @@
         }
 
         function detayAç(id) {
-            seciliId = String(id); // ID'yi kesin string yap
+            const mId = String(id);
+            document.getElementById('mdlMusteriId').value = mId;
+            
             const db = oku();
-            const m = db.find(x => String(x.id) === seciliId);
+            const m = db.find(x => String(x.id) === mId);
             if (!m) return;
 
             document.getElementById('mdlAd').textContent = m.ad;
@@ -272,12 +274,15 @@
 
         function modalKapat() {
             document.getElementById('detayModal').classList.add('hidden');
-            seciliId = null;
+            document.getElementById('mdlMusteriId').value = '';
         }
 
-        function islemKaydetTikla() {
-            if (!seciliId) {
-                alert('Hata: Seçili müşteri bulunamadı. Lütfen pencereyi kapatıp tekrar açın.');
+        function islemKaydetForm(e) {
+            e.preventDefault();
+            const targetId = document.getElementById('mdlMusteriId').value;
+            
+            if (!targetId) {
+                alert('Müşteri ID bulunamadı.');
                 return;
             }
 
@@ -289,12 +294,11 @@
 
             if (isNaN(tutar) || tutar <= 0) {
                 alert('Lütfen geçerli bir tutar yazınız.');
-                tutarInput.focus();
                 return;
             }
 
             const db = oku();
-            const idx = db.findIndex(x => String(x.id) === String(seciliId));
+            const idx = db.findIndex(x => String(x.id) === String(targetId));
 
             if (idx !== -1) {
                 let bak = Number(db[idx].bakiye) || 0;
@@ -319,10 +323,10 @@
                 tutarInput.value = '';
                 aciklamaInput.value = '';
                 
-                detayAç(seciliId);
+                detayAç(targetId);
                 listele();
             } else {
-                alert('Kayıt veri tabanında bulunamadı.');
+                alert('Müşteri kaydı veritabanında bulunamadı.');
             }
         }
 
@@ -352,28 +356,30 @@
         }
 
         function duzenlePrompt() {
+            const targetId = document.getElementById('mdlMusteriId').value;
             const db = oku();
-            const m = db.find(x => String(x.id) === String(seciliId));
+            const m = db.find(x => String(x.id) === String(targetId));
             if (!m) return;
 
             const yeniAd = prompt("Müşteri Adını Güncelleyin:", m.ad);
             if (!yeniAd) return;
             const yeniTel = prompt("Telefon Numarasını Güncelleyin:", m.tel || "");
 
-            const idx = db.findIndex(x => String(x.id) === String(seciliId));
+            const idx = db.findIndex(x => String(x.id) === String(targetId));
             if (idx !== -1) {
                 db[idx].ad = yeniAd.trim();
                 db[idx].tel = yeniTel ? yeniTel.trim() : '';
                 yaz(db);
-                detayAç(seciliId);
+                detayAç(targetId);
                 listele();
             }
         }
 
         function musteriSil() {
+            const targetId = document.getElementById('mdlMusteriId').value;
             if (confirm('Bu müşteriyi ve tüm hesap geçmişini silmek istediğinize emin misiniz?')) {
                 let db = oku();
-                db = db.filter(x => String(x.id) !== String(seciliId));
+                db = db.filter(x => String(x.id) !== String(targetId));
                 yaz(db);
                 modalKapat();
                 listele();
