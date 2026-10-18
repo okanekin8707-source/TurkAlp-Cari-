@@ -10,14 +10,14 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 pb-24">
+<body class="bg-slate-100 text-slate-800 pb-24 select-none">
 
     <!-- Header -->
     <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-20 flex justify-between items-center">
         <h1 class="font-bold text-base flex items-center gap-2">
             <i class="fa-solid fa-book-open"></i> TürkAlp Teknoloji
         </h1>
-        <span class="text-xs bg-blue-700 px-2.5 py-1 rounded-lg">Ön Muhasebe v7</span>
+        <span class="text-xs bg-blue-700 px-2.5 py-1 rounded-lg">Ön Muhasebe v8</span>
     </header>
 
     <main class="p-4 max-w-md mx-auto space-y-4">
@@ -57,7 +57,7 @@
                         <input type="number" step="0.01" id="mBakInput" placeholder="0.00" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500">
                     </div>
                 </div>
-                <button type="button" onclick="kayitEkle()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm shadow transition">
+                <button type="button" onclick="kayitEkle()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl text-sm shadow transition">
                     + Kaydı Ekle
                 </button>
             </div>
@@ -66,7 +66,7 @@
             <div id="topluForm" class="space-y-2 hidden">
                 <p class="text-xs text-slate-500">İsimleri alt alta yazarak tek seferde ekleyin:</p>
                 <textarea id="topluMetin" rows="4" placeholder="İsim 1&#10;İsim 2" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none"></textarea>
-                <button type="button" onclick="topluKaydet()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition">
+                <button type="button" onclick="topluKaydet()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs transition">
                     Toplu Kayıtları Ekle
                 </button>
             </div>
@@ -125,7 +125,7 @@
                     <input type="number" step="0.01" id="iTutar" placeholder="Tutar (₺)" class="p-2 bg-white border rounded-lg text-xs outline-none">
                 </div>
                 <input type="text" id="iAciklama" placeholder="Ürün veya Açıklama (Örn: Servis)" class="w-full p-2 bg-white border rounded-lg text-xs outline-none">
-                <button type="button" onclick="islemEkle()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
+                <button type="button" onclick="islemEkle()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
                     İşlemi / Ürünü Kaydet
                 </button>
             </div>
@@ -142,7 +142,7 @@
     </div>
 
     <script>
-        const KEY = 'turkalp_muhasebe_v7';
+        const KEY = 'turkalp_muhasebe_v8';
         let aktifSekme = 'musteri';
         let aktifId = null;
 
@@ -154,10 +154,10 @@
             const d = localStorage.getItem(KEY);
             if (d) {
                 try {
-                    const parsed = JSON.parse(d);
+                    const p = JSON.parse(d);
                     return {
-                        musteri: Array.isArray(parsed.musteri) ? parsed.musteri : [],
-                        toptanci: Array.isArray(parsed.toptanci) ? parsed.toptanci : []
+                        musteri: Array.isArray(p.musteri) ? p.musteri : [],
+                        toptanci: Array.isArray(p.toptanci) ? p.toptanci : []
                     };
                 } catch(e) {
                     return { musteri: [], toptanci: [] };
@@ -211,7 +211,7 @@
 
             const db = veriOku();
             db[aktifSekme].unshift({
-                id: Number(Date.now()),
+                id: String(Date.now()),
                 unvan: ad,
                 telefon: tel,
                 bakiye: bak,
@@ -227,87 +227,5 @@
             document.getElementById('mAdInput').value = '';
             document.getElementById('mTelInput').value = '';
             document.getElementById('mBakInput').value = '';
-            listele();
-        }
-
-        function topluKaydet() {
-            const metin = document.getElementById('topluMetin').value.trim();
-            if (!metin) return;
-
-            const db = veriOku();
-            metin.split('\n').forEach((isim, i) => {
-                const temiz = isim.trim();
-                if (temiz) {
-                    db[aktifSekme].unshift({
-                        id: Number(Date.now() + i),
-                        unvan: temiz,
-                        telefon: '',
-                        bakiye: 0,
-                        hareketler: []
-                    });
-                }
-            });
-
-            veriYaz(db);
-            document.getElementById('topluMetin').value = '';
-            topluEkleToggle();
-            listele();
-        }
-
-        function listele() {
-            const db = veriOku();
-            const liste = db[aktifSekme] || [];
-            const arama = document.getElementById('aramaBox').value.toLowerCase();
-            const container = document.getElementById('listeContainer');
-            container.innerHTML = '';
-
-            let vSum = 0, aSum = 0;
-            const filtrelenmis = liste.filter(item => item.unvan.toLowerCase().includes(arama));
-            document.getElementById('sayac').textContent = `(${filtrelenmis.length})`;
-
-            if (filtrelenmis.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">Kayıt bulunmuyor.</div>`;
-            }
-
-            filtrelenmis.forEach(item => {
-                const b = Number(item.bakiye);
-                if (b > 0) vSum += b;
-                if (b < 0) aSum += Math.abs(b);
-
-                const card = document.createElement('div');
-                card.className = "bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-blue-50/50 transition";
-                card.onclick = () => detayAc(item.id);
-
-                card.innerHTML = `
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-sm">${item.unvan}</h4>
-                        <p class="text-xs text-slate-400">${item.telefon || 'Telefon yok'}</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="font-bold text-sm block ${b > 0 ? 'text-rose-500' : (b < 0 ? 'text-emerald-500' : 'text-slate-400')}">
-                            ${Math.abs(b).toFixed(1)} ₺
-                        </span>
-                        <span class="text-[10px] text-slate-400">${b > 0 ? 'Borç (Verdim)' : (b < 0 ? 'Alacak (Aldım)' : 'Dengede')}</span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-
-            document.getElementById('toplamVerdim').textContent = `${vSum.toFixed(1)} ₺`;
-            document.getElementById('toplamAldim').textContent = `${aSum.toFixed(1)} ₺`;
-        }
-
-        function detayAc(id) {
-            aktifId = Number(id);
-            const db = veriOku();
-            const liste = db[aktifSekme] || [];
-            const item = liste.find(m => Number(m.id) === aktifId);
-            if (!item) return;
-
-            document.getElementById('mAd').textContent = item.unvan;
-            document.getElementById('mTel').textContent = item.telefon || 'Telefon yok';
-
-            const b = Number(item.bakiye);
-            const bEl = document.getElementById('mBakiye');
-            bEl.textContent = `${Math.abs
+            list
         
