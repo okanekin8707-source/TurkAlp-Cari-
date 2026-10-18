@@ -19,12 +19,9 @@
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
 
-        /* Logo ve Başlık Düzeni */
-        .header-container { display: flex; align-items: center; gap: 12px; }
-        .header-logo { height: 45px; width: 45px; border-radius: 6px; object-fit: cover; background: #fff; border: 1px solid #ddd; }
-
-        .baslik-ust { color: #cc0000; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; line-height: 1.1; }
-        .baslik-alt { color: #0066cc; font-size: 14px; margin-top: 2px; font-weight: bold; display: block; }
+        /* Sadece Logo Odaklı Header Stili */
+        .header-logo-main { max-height: 50px; width: auto; object-fit: contain; }
+        .baslik-alt { color: #0066cc; font-size: 13px; margin-top: 2px; font-weight: bold; display: block; }
 
         .menu-container { position: relative; display: inline-block; }
         .menu-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 140px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; border-radius: 6px; border: 1px solid #ccc; overflow: hidden; }
@@ -297,125 +294,4 @@
                 if (!globalListe[index].hareketler) globalListe[index].hareketler = [];
 
                 globalListe[index].hareketler.unshift({
-                    tarih: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
-                    aciklama: aciklamaVal,
-                    tip: tip,
-                    tutar: tutar
-                });
-
-                var yukleniyor = document.getElementById('yukleniyor');
-                if (yukleniyor) yukleniyor.style.display = 'block';
-                try {
-                    await setDoc(doc(db, "musteriler", id), globalListe[index]);
-                    await verileriBuluttanCek();
-                    alert("İşlem buluta başarıyla kaydedildi!");
-                } catch (e) {
-                    console.error("İşlem hatası: ", e);
-                    alert("İşlem kaydedilirken hata oluştu.");
-                    if (yukleniyor) yukleniyor.style.display = 'none';
-                }
-            }
-        };
-
-        window.hareketSil = async function(musteriId, hareketIndex) {
-            if (!confirm("Bu işlemi silmek istediğinize emin misiniz? Bakiye buna göre güncellenecektir.")) {
-                return;
-            }
-
-            var index = globalListe.findIndex(function(x) { return String(x.id) === String(musteriId); });
-            if (index !== -1) {
-                var musteri = globalListe[index];
-                var silinecekHareket = musteri.hareketler[hareketIndex];
-
-                var mevcutBakiye = Number(musteri.bakiye) || 0;
-                if (silinecekHareket.tip === 'verdim') {
-                    mevcutBakiye -= Number(silinecekHareket.tutar);
-                } else {
-                    mevcutBakiye += Number(silinecekHareket.tutar);
-                }
-
-                musteri.bakiye = mevcutBakiye;
-                musteri.hareketler.splice(hareketIndex, 1);
-
-                var yukleniyor = document.getElementById('yukleniyor');
-                if (yukleniyor) yukleniyor.style.display = 'block';
-                try {
-                    await setDoc(doc(db, "musteriler", musteriId), musteri);
-                    await verileriBuluttanCek();
-                    alert("İşlem silindi ve bakiye güncellendi!");
-                } catch (e) {
-                    console.error("İşlem silme hatası: ", e);
-                    alert("İşlem silinirken hata oluştu.");
-                    if (yukleniyor) yukleniyor.style.display = 'none';
-                }
-            }
-        };
-
-        window.musteriSil = async function(id) {
-            if (confirm("Bu müşteriyi TÜMÜYLE silmek istediğinize emin misiniz?")) {
-                var yukleniyor = document.getElementById('yukleniyor');
-                if (yukleniyor) yukleniyor.style.display = 'block';
-                try {
-                    await deleteDoc(doc(db, "musteriler", id));
-                    seciliMusteriId = null;
-                    await verileriBuluttanCek();
-                    alert("Müşteri silindi!");
-                } catch (e) {
-                    console.error("Silme hatası: ", e);
-                    alert("Silme sırasında hata oluştu.");
-                    if (yukleniyor) yukleniyor.style.display = 'none';
-                }
-            }
-        };
-    </script>
-</head>
-<body>
-
-    <!-- ŞİFRE GİRİŞ EKRANI -->
-    <div id="sifreEkrani">
-        <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
-            <div style="margin-bottom: 15px;">
-                <div class="header-container" style="justify-content: center; margin-bottom: 8px;">
-                    <img src="logo.png" alt="Logo" class="header-logo">
-                    <h2 class="baslik-ust">TÜRKALP</h2>
-                </div>
-                <span class="baslik-alt">Alacak - Verecek Takibi</span>
-            </div>
-            <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
-            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
-            <button onclick="sifreKontrol()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <!-- ANA UYGULAMA -->
-    <div id="anaUygulama" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <div class="header-container">
-                <img src="logo.png" alt="Logo" class="header-logo">
-                <div>
-                    <h2 class="baslik-ust">TÜRKALP</h2>
-                    <span class="baslik-alt">Alacak - Verecek Takibi</span>
-                </div>
-            </div>
-            
-            <!-- AÇILIR MENÜ ALANI -->
-            <div class="menu-container">
-                <button onclick="menuAcKapat()" style="width: auto; padding: 8px 14px; background: #444; font-size: 14px;">⚙️ Menü</button>
-                <div id="ayarlarMenu" class="menu-content">
-                    <button onclick="sifreDegistir()">🔑 Şifre Değiştir</button>
-                    <button onclick="cikisYap()" style="color: #cc0000;">🚪 Çıkış Yap</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- YENİ MÜŞTERİ EKLEME -->
-        <div class="box">
-            <label>Yeni Müşteri:</label>
-            <input type="text" id="yeniAd" placeholder="Müşteri adı...">
-            <button onclick="kaydet()">Kaydet</button>
-        </div>
-        
-        <!-- MÜŞTERİ ARAMA KUTUSU -->
-        <div class="box">
-            <b>Müşteri Ara</b>
-            <input type="text" id="aramaK
+                    
