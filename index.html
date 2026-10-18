@@ -9,23 +9,19 @@
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
         input, select { width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 8px; box-sizing: border-box; border: 1px solid #aaa; border-radius: 4px; }
         button { width: 100%; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        
         .kisi { background: white; padding: 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #ddd; cursor: pointer; }
-        .kisi.red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
-        .kisi.green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
-        
+        .red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
+        .green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
         .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
-        .history { background: white; padding: 6px 8px; border-radius: 4px; margin-top: 4px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .history { background: white; padding: 8px; border-radius: 4px; margin-top: 6px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .red { color: #cc0000; font-weight: bold; }
         .green { color: #009933; font-weight: bold; }
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
 
-        /* Başlık Stili */
         .baslik-ust { color: #cc0000; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; line-height: 1.1; }
         .baslik-alt { color: #0066cc; font-size: 14px; margin-top: 2px; font-weight: bold; display: block; }
 
-        /* Menü Stilleri */
         .menu-container { position: relative; display: inline-block; }
         .menu-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 140px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; border-radius: 6px; border: 1px solid #ccc; overflow: hidden; }
         .menu-content button { background: white; color: #333; text-align: left; padding: 10px; border-radius: 0; border-bottom: 1px solid #eee; }
@@ -317,7 +313,7 @@
         };
 
         window.hareketSil = async function(musteriId, hareketIndex) {
-            if (!confirm("Bu işlemi silmek istediğinize emin misiniz? Bakiyeuna göre güncellenecektir.")) {
+            if (!confirm("Bu işlemi silmek istediğinize emin misiniz? Bakiye buna göre güncellenecektir.")) {
                 return;
             }
 
@@ -360,5 +356,65 @@
                     await verileriBuluttanCek();
                     alert("Müşteri silindi!");
                 } catch (e) {
-                    console.error("Silme hatası:
-        
+                    console.error("Silme hatası: ", e);
+                    alert("Silme sırasında hata oluştu.");
+                    if (yukleniyor) yukleniyor.style.display = 'none';
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+
+    <!-- ŞİFRE GİRİŞ EKRANI -->
+    <div id="sifreEkrani">
+        <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
+            <div style="margin-bottom: 15px;">
+                <h2 class="baslik-ust">TÜRKALP</h2>
+                <span class="baslik-alt">Alacak - Verecek Takibi</span>
+            </div>
+            <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
+            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
+            <button onclick="sifreKontrol()">Giriş Yap</button>
+        </div>
+    </div>
+
+    <!-- ANA UYGULAMA -->
+    <div id="anaUygulama" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div>
+                <h2 class="baslik-ust">TÜRKALP</h2>
+                <span class="baslik-alt">Alacak - Verecek Takibi</span>
+            </div>
+            
+            <!-- AÇILIR MENÜ ALANI -->
+            <div class="menu-container">
+                <button onclick="menuAcKapat()" style="width: auto; padding: 8px 14px; background: #444; font-size: 14px;">⚙️ Menü</button>
+                <div id="ayarlarMenu" class="menu-content">
+                    <button onclick="sifreDegistir()">🔑 Şifre Değiştir</button>
+                    <button onclick="cikisYap()" style="color: #cc0000;">🚪 Çıkış Yap</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- YENİ MÜŞTERİ EKLEME -->
+        <div class="box">
+            <label>Yeni Müşteri:</label>
+            <input type="text" id="yeniAd" placeholder="Müşteri adı...">
+            <button onclick="kaydet()">Kaydet</button>
+        </div>
+
+        <!-- MÜŞTERİ ARAMA KUTUSU -->
+        <div class="box">
+            <b>Müşteri Ara</b>
+            <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
+        </div>
+
+        <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
+
+        <!-- LİSTE -->
+        <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
+        <div id="listeContainer"></div>
+    </div>
+</body>
+</html>
