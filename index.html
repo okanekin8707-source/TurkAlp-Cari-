@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TürkAlp Teknoloji - Müşteri Takip v27</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
         input, select { width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 8px; box-sizing: border-box; border: 1px solid #aaa; border-radius: 4px; }
         button { width: 100%; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .kisi { background: white; padding: 10px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #ddd; cursor: pointer; }
+        .kisi { background: white; padding: 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #ddd; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        
+        /* Komple Renk Stilleri */
+        .kisi.red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
+        .kisi.green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
+        
         .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
         .history { background: white; padding: 6px; border-radius: 4px; margin-top: 4px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; }
         .red { color: #cc0000; font-weight: bold; }
@@ -181,17 +186,17 @@
 
             filtrelenmisListe.forEach(function(m) {
                 var bakiye = Number(m.bakiye) || 0;
-                // bakiye > 0: Alacaklısınız (Müşteri borçlu) -> Kırmızı
-                // bakiye < 0: Borçlusunuz (Müşteri alacaklı) -> Yeşil
                 var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
+                var bgClass = bakiye > 0 ? 'red-bg' : (bakiye < 0 ? 'green-bg' : '');
                 var durumMetni = bakiye > 0 ? 'Alacaklısınız (Borçlu)' : (bakiye < 0 ? 'Borçlusunuz (Alacaklı)' : 'Dengede');
 
-                var div = document.createElement('div');
-                div.className = 'kisi';
-                
-                var icerik = '<div onclick="sec(\'' + m.id + '\')" style="display:flex; justify-content:space-between; align-items:center;">' +
+                var anaDiv = document.createElement('div');
+                anaDiv.className = 'box';
+                if (bgClass) anaDiv.classList.add(bgClass);
+
+                var icerik = '<div onclick="sec(\'' + m.id + '\')" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">' +
                     '<div>' +
-                        '<b style="font-size:16px;">' + m.ad + '</b>' +
+                        '<b style="font-size:16px;">👤 ' + m.ad + '</b>' +
                     '</div>' +
                     '<div style="text-align:right;">' +
                         '<span class="' + renk + '" style="font-size:15px;">' + Math.abs(bakiye).toFixed(2) + ' ₺</span><br>' +
@@ -235,8 +240,8 @@
                     icerik += '</div>';
                 }
 
-                div.innerHTML = icerik;
-                container.appendChild(div);
+                anaDiv.innerHTML = icerik;
+                container.appendChild(anaDiv);
             });
         };
 
@@ -319,48 +324,5 @@
 
     <!-- ŞİFRE GİRİŞ EKRANI -->
     <div id="sifreEkrani">
-        <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
-            <h3 style="color: #0066cc; margin-top: 0;">TürkAlp Güvenlik</h3>
-            <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
-            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
-            <button onclick="sifreKontrol()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <!-- ANA UYGULAMA -->
-    <div id="anaUygulama" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h2 style="color:#0066cc; margin:0;">TürkAlp Müşteri Takip</h2>
+        <div class="box" style="width: 100%;
             
-            <!-- AÇILIR MENÜ ALANI -->
-            <div class="menu-container">
-                <button onclick="menuAcKapat()" style="width: auto; padding: 6px 12px; background: #444; font-size: 14px;">⚙️ Menü</button>
-                <div id="ayarlarMenu" class="menu-content">
-                    <button onclick="sifreDegistir()">🔑 Şifre Değiştir</button>
-                    <button onclick="cikisYap()" style="color: #cc0000;">🚪 Çıkış Yap</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- YENİ MÜŞTERİ EKLEME -->
-        <div class="box">
-            <b>Yeni Müşteri Ekle</b>
-            <label>Müşteri Adı:</label>
-            <input type="text" id="yeniAd" placeholder="Örn: Ahmet Yılmaz">
-            <button onclick="kaydet()">Müşteriyi Kaydet</button>
-        </div>
-
-        <!-- MÜŞTERİ ARAMA KUTUSU -->
-        <div class="box">
-            <b>Müşteri Ara</b>
-            <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
-        </div>
-
-        <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
-
-        <!-- LİSTE -->
-        <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
-        <div id="listeContainer"></div>
-    </div>
-</body>
-</html>
