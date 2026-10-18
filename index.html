@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TürkAlp Teknoloji - Müşteri Takip v25</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip v25.1</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
@@ -304,10 +304,45 @@
 </head>
 <body>
 
-    <!-- ŞİFRE GİRİŞ Ekrani -->
+    <!-- ŞİFRE GİRİŞ EKRANI -->
     <div id="sifreEkrani">
         <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
             <h3 style="color: #0066cc; margin-top: 0;">TürkAlp Güvenlik</h3>
             <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
-            <input type="password" id
-                
+            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
+            <button onclick="sifreKontrol()">Giriş Yap</button>
+        </div>
+    </div>
+
+    <!-- ANA UYGULAMA -->
+    <div id="anaUygulama" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h2 style="color:#0066cc; margin:0;">TürkAlp Müşteri Takip v25.1</h2>
+            <div>
+                <button onclick="sifreDegistir()" style="width: auto; padding: 5px 8px; font-size: 11px; background: #666; margin-right: 4px;">Şifre Değiştir</button>
+                <button onclick="cikisYap()" style="width: auto; padding: 5px 8px; font-size: 11px; background: #cc0000;">Çıkış Yap</button>
+            </div>
+        </div>
+
+        <!-- YENİ MÜŞTERİ EKLEME -->
+        <div class="box">
+            <b>Yeni Müşteri Ekle</b>
+            <label>Müşteri Adı:</label>
+            <input type="text" id="yeniAd" placeholder="Örn: Ahmet Yılmaz">
+            <button onclick="kaydet()">Müşteriyi Kaydet</button>
+        </div>
+
+        <!-- MÜŞTERİ ARAMA KUTUSU -->
+        <div class="box">
+            <b>Müşteri Ara</b>
+            <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
+        </div>
+
+        <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
+
+        <!-- LİSTE -->
+        <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
+        <div id="listeContainer"></div>
+    </div>
+</body>
+</html>
