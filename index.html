@@ -213,6 +213,11 @@
 
                 if (String(m.id) === String(seciliMusteriId)) {
                     icerik += '<div class="panel">' +
+                        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #b3d1ff; padding-bottom:6px;">' +
+                            '<span style="font-size:12px; color:#555;"><b>Müşteri Yönetimi</b></span>' +
+                            '<button onclick="event.stopPropagation(); musteriSil(\'' + m.id + '\')" style="width:auto; padding:4px 10px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
+                        '</div>' +
+
                         '<b>İşlem / Malzeme Ekle</b><br>' +
                         '<label>İşlem Türü:</label>' +
                         '<select id="islemTip_' + m.id + '">' +
@@ -240,10 +245,6 @@
                     } else {
                         icerik += '<div style="font-size:12px; color:#777; margin-top:4px;">İşlem geçmişi yok.</div>';
                     }
-
-                    icerik += '<div style="text-align:right; margin-top:8px;">' +
-                        '<button onclick="event.stopPropagation(); musteriSil(\'' + m.id + '\')" style="width:auto; padding:6px 12px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
-                    '</div>';
 
                     icerik += '</div>';
                 }
@@ -347,7 +348,7 @@
         };
 
         window.musteriSil = async function(id) {
-            if (confirm("Bu müşteriyi silmek istediğinize emin misiniz?")) {
+            if (confirm("Bu müşteriyi TÜMÜYLE silmek istediğinize emin misiniz?")) {
                 var yukleniyor = document.getElementById('yukleniyor');
                 if (yukleniyor) yukleniyor.style.display = 'block';
                 try {
@@ -417,4 +418,5 @@
         <div id="listeContainer"></div>
     </div>
 </body>
-</html>
+    </html>
+    
