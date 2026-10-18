@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TürkAlp Teknoloji - Müşteri Takip v24 (Bulut)</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip v25</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
@@ -21,7 +21,7 @@
     <!-- Firebase SDK (Modular v10) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDV0481BzK2YJnXhd0kMFx6QjN83XuhMkA",
@@ -37,6 +37,7 @@
         const db = getFirestore(app);
 
         const SIFRE_KEY = 'turkalp_sifre_v1';
+        const OTURUM_KEY = 'turkalp_oturum_acik';
         let globalListe = [];
         let seciliMusteriId = null;
 
@@ -44,6 +45,12 @@
             var kayitliSifre = localStorage.getItem(SIFRE_KEY);
             if (!kayitliSifre) {
                 document.getElementById('sifreBilgi').textContent = "İlk kullanım için yeni bir şifre belirleyin:";
+            } else {
+                // Eğer daha önceden giriş yapıldıysa doğrudan uygulamayı aç
+                var oturumAcik = localStorage.getItem(OTURUM_KEY);
+                if (oturumAcik === 'true') {
+                    gizliEkraniKapat();
+                }
             }
         };
 
@@ -57,10 +64,12 @@
                     return;
                 }
                 localStorage.setItem(SIFRE_KEY, girilen.trim());
+                localStorage.setItem(OTURUM_KEY, 'true');
                 alert("Şifreniz başarıyla kaydedildi!");
                 gizliEkraniKapat();
             } else {
                 if (girilen === kayitliSifre) {
+                    localStorage.setItem(OTURUM_KEY, 'true');
                     gizliEkraniKapat();
                 } else {
                     alert("Hatalı şifre!");
@@ -74,6 +83,11 @@
             document.getElementById('anaUygulama').style.display = 'block';
             verileriBuluttanCek();
         }
+
+        window.cikisYap = function() {
+            localStorage.removeItem(OTURUM_KEY);
+            location.reload();
+        };
 
         window.sifreDegistir = function() {
             var eski = prompt("Mevcut şifrenizi girin:");
@@ -99,7 +113,6 @@
                 querySnapshot.forEach((docSnap) => {
                     globalListe.push(docSnap.data());
                 });
-                // En son eklenen en üstte görünmesi için ID tarihine göre sırala
                 globalListe.sort((a, b) => b.timestamp - a.timestamp);
             } catch (e) {
                 console.error("Veri çekme hatası: ", e);
@@ -159,175 +172,5 @@
             filtrelenmisListe.forEach(function(m) {
                 var bakiye = Number(m.bakiye) || 0;
                 var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
-                var durumMetni = bakiye > 0 ? 'Borçlu (Sana)' : (bakiye < 0 ? 'Alacaklı (Senden)' : 'Dengede');
 
-                var div = document.createElement('div');
-                div.className = 'kisi';
-                
-                var icerik = '<div onclick="sec(\'' + m.id + '\')" style="display:flex; justify-content:space-between; align-items:center;">' +
-                    '<div>' +
-                        '<b style="font-size:16px;">' + m.ad + '</b>' +
-                    '</div>' +
-                    '<div style="text-align:right;">' +
-                        '<span class="' + renk + '" style="font-size:15px;">' + Math.abs(bakiye).toFixed(2) + ' ₺</span><br>' +
-                        '<span style="font-size:11px;" class="' + renk + '">' + durumMetni + '</span>' +
-                    '</div>' +
-                '</div>';
-
-                if (String(m.id) === String(seciliMusteriId)) {
-                    icerik += '<div class="panel">' +
-                        '<b>İşlem / Malzeme Ekle</b><br>' +
-                        '<label>İşlem Türü:</label>' +
-                        '<select id="islemTip_' + m.id + '">' +
-                            '<option value="verdim">Mal/Borç Verdim (+ Artırır)</option>' +
-                            '<option value="aldim">Para/Tahsilat Aldım (- Düşer)</option>' +
-                        '</select>' +
-                        '<label>Tutar (₺):</label>' +
-                        '<input type="number" step="0.01" id="islemTutar_' + m.id + '" placeholder="0.00">' +
-                        '<label>Açıklama:</label>' +
-                        '<input type="text" id="islemAciklama_' + m.id + '" placeholder="Örn: Nakit / Malzeme">' +
-                        '<button onclick="islemYap(\'' + m.id + '\')" style="background:#009933;">İşlemi Kaydet ve Hesapla</button>' +
-                        
-                        '<hr style="margin:10px 0; border:0; border-top:1px solid #ccc;">' +
-                        '<b>Hesap Geçmişi:</b>';
-
-                    if (m.hareketler && m.hareketler.length > 0) {
-                        m.hareketler.forEach(function(h) {
-                            var hRenk = h.tip === 'verdim' ? 'red' : 'green';
-                            icerik += '<div class="history">' +
-                                '<span><b>' + h.aciklama + '</b> <small>(' + h.tarih + ')</small></span>' +
-                                '<span class="' + hRenk + '">' + (h.tip === 'verdim' ? '+' : '-') + Number(h.tutar).toFixed(2) + ' ₺</span>' +
-                            '</div>';
-                        });
-                    } else {
-                        icerik += '<div style="font-size:12px; color:#777; margin-top:4px;">İşlem geçmişi yok.</div>';
-                    }
-
-                    icerik += '<div style="text-align:right; margin-top:8px;">' +
-                        '<button onclick="musteriSil(\'' + m.id + '\')" style="width:auto; padding:6px 12px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
-                    '</div>';
-
-                    icerik += '</div>';
-                }
-
-                div.innerHTML = icerik;
-                container.appendChild(div);
-            });
-        };
-
-        window.sec = function(id) {
-            if (seciliMusteriId === id) {
-                seciliMusteriId = null;
-            } else {
-                seciliMusteriId = id;
-            }
-            listeyiEkranaBas();
-        };
-
-        window.islemYap = async function(id) {
-            var tip = document.getElementById('islemTip_' + id).value;
-            var tutarVal = document.getElementById('islemTutar_' + id).value;
-            var aciklamaVal = document.getElementById('islemAciklama_' + id).value.trim();
-
-            var tutar = parseFloat(tutarVal);
-            if (isNaN(tutar) || tutar <= 0) {
-                alert("Lütfen geçerli bir tutar giriniz!");
-                return;
-            }
-
-            if (!aciklamaVal) {
-                aciklamaVal = tip === 'verdim' ? 'Mal/Borç Verildi' : 'Tahsilat Alındı';
-            }
-
-            var index = globalListe.findIndex(function(x) { return String(x.id) === String(id); });
-
-            if (index !== -1) {
-                var mevcutBakiye = Number(globalListe[index].bakiye) || 0;
-
-                if (tip === 'verdim') {
-                    mevcutBakiye += tutar;
-                } else {
-                    mevcutBakiye -= tutar;
-                }
-
-                globalListe[index].bakiye = mevcutBakiye;
-                if (!globalListe[index].hareketler) globalListe[index].hareketler = [];
-
-                globalListe[index].hareketler.unshift({
-                    tarih: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
-                    aciklama: aciklamaVal,
-                    tip: tip,
-                    tutar: tutar
-                });
-
-                document.getElementById('yukleniyor').style.display = 'block';
-                try {
-                    await setDoc(doc(db, "musteriler", id), globalListe[index]);
-                    await verileriBuluttanCek();
-                    alert("İşlem buluta başarıyla kaydedildi!");
-                } catch (e) {
-                    console.error("İşlem hatası: ", e);
-                    alert("İşlem kaydedilirken hata oluştu.");
-                    document.getElementById('yukleniyor').style.display = 'none';
-                }
-            }
-        };
-
-        window.musteriSil = async function(id) {
-            if (confirm("Bu müşteriyi silmek istediğinize emin misiniz?")) {
-                document.getElementById('yukleniyor').style.display = 'block';
-                try {
-                    await deleteDoc(doc(db, "musteriler", id));
-                    seciliMusteriId = null;
-                    await verileriBuluttanCek();
-                    alert("Müşteri silindi!");
-                } catch (e) {
-                    console.error("Silme hatası: ", e);
-                    alert("Silme sırasında hata oluştu.");
-                    document.getElementById('yukleniyor').style.display = 'none';
-                }
-            }
-        };
-    </script>
-</head>
-<body>
-
-    <!-- ŞİFRE GİRİŞ EKRANI -->
-    <div id="sifreEkrani">
-        <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
-            <h3 style="color: #0066cc; margin-top: 0;">TürkAlp Güvenlik</h3>
-            <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
-            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
-            <button onclick="sifreKontrol()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <!-- ANA UYGULAMA -->
-    <div id="anaUygulama" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h2 style="color:#0066cc; margin:0;">TürkAlp Müşteri Takip v24</h2>
-            <button onclick="sifreDegistir()" style="width: auto; padding: 5px 10px; font-size: 11px; background: #666;">Şifre Değiştir</button>
-        </div>
-
-        <!-- YENİ MÜŞTERİ EKLEME -->
-        <div class="box">
-            <b>Yeni Müşteri Ekle</b>
-            <label>Müşteri Adı:</label>
-            <input type="text" id="yeniAd" placeholder="Örn: Ahmet Yılmaz">
-            <button onclick="kaydet()">Müşteriyi Kaydet</button>
-        </div>
-
-        <!-- MÜŞTERİ ARAMA KUTUSU -->
-        <div class="box">
-            <b>Müşteri Ara</b>
-            <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
-        </div>
-
-        <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
-
-        <!-- LİSTE -->
-        <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
-        <div id="listeContainer"></div>
-    </div>
-</body>
-</html>
+        
