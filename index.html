@@ -17,17 +17,17 @@
         <h1 class="font-bold text-base flex items-center gap-2">
             <i class="fa-solid fa-book-open"></i> TürkAlp Teknoloji
         </h1>
-        <span class="text-xs bg-blue-700 px-2.5 py-1 rounded-lg">Ön Muhasebe v8</span>
+        <span class="text-xs bg-blue-700 px-2.5 py-1 rounded-lg">Ön Muhasebe v9</span>
     </header>
 
     <main class="p-4 max-w-md mx-auto space-y-4">
 
         <!-- SEKME SEÇİMİ (MÜŞTERİLER / TOPTANCILAR) -->
-        <div class="bg-slate-200 p-1 rounded-xl flex text-xs font-bold">
-            <button type="button" id="btnMusteriTab" onclick="sekmeDegis('musteri')" class="flex-1 py-2.5 rounded-lg bg-white text-blue-600 shadow-sm transition">
+        <div class="bg-slate-200 p-1 rounded-xl flex text-xs font-bold shadow-inner">
+            <button type="button" id="btnMusteriTab" class="flex-1 py-2.5 rounded-lg bg-white text-blue-600 shadow-sm transition">
                 <i class="fa-solid fa-users mr-1"></i> MÜŞTERİLER
             </button>
-            <button type="button" id="btnToptanciTab" onclick="sekmeDegis('toptanci')" class="flex-1 py-2.5 rounded-lg text-slate-500 transition">
+            <button type="button" id="btnToptanciTab" class="flex-1 py-2.5 rounded-lg text-slate-500 transition">
                 <i class="fa-solid fa-truck mr-1"></i> TOPTANCILAR
             </button>
         </div>
@@ -36,7 +36,7 @@
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
             <h2 id="formBaslik" class="font-bold text-slate-700 text-sm border-b pb-2 flex justify-between items-center">
                 <span><i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Yeni Müşteri Ekle</span>
-                <button type="button" onclick="topluEkleToggle()" class="text-xs text-blue-600 font-normal hover:underline">
+                <button type="button" id="btnTopluToggle" class="text-xs text-blue-600 font-normal hover:underline">
                     Toplu Ekle
                 </button>
             </h2>
@@ -57,7 +57,7 @@
                         <input type="number" step="0.01" id="mBakInput" placeholder="0.00" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:border-blue-500">
                     </div>
                 </div>
-                <button type="button" onclick="kayitEkle()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl text-sm shadow transition">
+                <button type="button" id="btnKayitEkle" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl text-sm shadow transition">
                     + Kaydı Ekle
                 </button>
             </div>
@@ -66,7 +66,7 @@
             <div id="topluForm" class="space-y-2 hidden">
                 <p class="text-xs text-slate-500">İsimleri alt alta yazarak tek seferde ekleyin:</p>
                 <textarea id="topluMetin" rows="4" placeholder="İsim 1&#10;İsim 2" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none"></textarea>
-                <button type="button" onclick="topluKaydet()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs transition">
+                <button type="button" id="btnTopluKaydet" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs transition">
                     Toplu Kayıtları Ekle
                 </button>
             </div>
@@ -88,7 +88,7 @@
         <div class="space-y-2">
             <div class="flex justify-between items-center">
                 <h3 id="listeBaslik" class="font-bold text-slate-700 text-sm">Müşteriler <span id="sayac" class="text-slate-400 font-normal">(0)</span></h3>
-                <input type="text" id="aramaBox" oninput="listele()" placeholder="Ara..." class="p-1.5 px-3 bg-white border rounded-xl text-xs outline-none w-32">
+                <input type="text" id="aramaBox" placeholder="Ara..." class="p-1.5 px-3 bg-white border rounded-xl text-xs outline-none w-32">
             </div>
 
             <div id="listeContainer" class="space-y-2">
@@ -106,7 +106,7 @@
                     <h3 id="mAd" class="font-bold text-slate-800 text-base">Ad</h3>
                     <p id="mTel" class="text-xs text-slate-400"></p>
                 </div>
-                <button type="button" onclick="modalKapat()" class="text-slate-400 text-lg font-bold px-2 py-1">✕</button>
+                <button type="button" id="btnModalKapat" class="text-slate-400 text-lg font-bold px-2 py-1">✕</button>
             </div>
 
             <div class="bg-slate-50 p-3 rounded-xl text-center border">
@@ -125,7 +125,7 @@
                     <input type="number" step="0.01" id="iTutar" placeholder="Tutar (₺)" class="p-2 bg-white border rounded-lg text-xs outline-none">
                 </div>
                 <input type="text" id="iAciklama" placeholder="Ürün veya Açıklama (Örn: Servis)" class="w-full p-2 bg-white border rounded-lg text-xs outline-none">
-                <button type="button" onclick="islemEkle()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
+                <button type="button" id="btnIslemKaydet" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
                     İşlemi / Ürünü Kaydet
                 </button>
             </div>
@@ -136,28 +136,94 @@
             </div>
 
             <div class="border-t pt-2 text-right">
-                <button type="button" onclick="kayitSil()" class="text-rose-600 text-xs font-bold py-1 px-2">Kaydı Sil</button>
+                <button type="button" id="btnKayitSil" class="text-rose-600 text-xs font-bold py-1 px-2">Kaydı Sil</button>
             </div>
         </div>
     </div>
 
     <script>
-        const KEY = 'turkalp_muhasebe_v8';
+        const KEY = 'turkalp_muhasebe_v9_db';
         let aktifSekme = 'musteri';
         let aktifId = null;
 
         document.addEventListener('DOMContentLoaded', function() {
+            verileriKurtar();
             listele();
+
+            // Buton Dinleyicileri (Event Listeners)
+            document.getElementById('btnMusteriTab').addEventListener('click', function(e) {
+                e.preventDefault();
+                sekmeDegis('musteri');
+            });
+
+            document.getElementById('btnToptanciTab').addEventListener('click', function(e) {
+                e.preventDefault();
+                sekmeDegis('toptanci');
+            });
+
+            document.getElementById('btnKayitEkle').addEventListener('click', function(e) {
+                e.preventDefault();
+                kayitEkle();
+            });
+
+            document.getElementById('btnTopluKaydet').addEventListener('click', function(e) {
+                e.preventDefault();
+                topluKaydet();
+            });
+
+            document.getElementById('btnTopluToggle').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('tekliForm').classList.toggle('hidden');
+                document.getElementById('topluForm').classList.toggle('hidden');
+            });
+
+            document.getElementById('btnIslemKaydet').addEventListener('click', function(e) {
+                e.preventDefault();
+                islemEkle();
+            });
+
+            document.getElementById('btnModalKapat').addEventListener('click', function(e) {
+                e.preventDefault();
+                modalKapat();
+            });
+
+            document.getElementById('btnKayitSil').addEventListener('click', function(e) {
+                e.preventDefault();
+                kayitSil();
+            });
+
+            document.getElementById('aramaBox').addEventListener('input', function() {
+                listele();
+            });
         });
+
+        function verileriKurtar() {
+            if (localStorage.getItem(KEY)) return;
+            const eskiKeys = ['turkalp_muhasebe_kalici_db', 'turkalp_muhasebe_v8', 'turkalp_muhasebe_v7', 'turkalp_muhasebe_v6'];
+            let kurtarilan = { musteri: [], toptanci: [] };
+
+            for (let k of eskiKeys) {
+                const veri = localStorage.getItem(k);
+                if (veri) {
+                    try {
+                        const parsed = JSON.parse(veri);
+                        if (parsed.musteri && parsed.musteri.length > 0) kurtarilan.musteri = parsed.musteri;
+                        if (parsed.toptanci && parsed.toptanci.length > 0) kurtarilan.toptanci = parsed.toptanci;
+                        break;
+                    } catch(e) {}
+                }
+            }
+            localStorage.setItem(KEY, JSON.stringify(kurtarilan));
+        }
 
         function veriOku() {
             const d = localStorage.getItem(KEY);
             if (d) {
                 try {
-                    const p = JSON.parse(d);
+                    const parsed = JSON.parse(d);
                     return {
-                        musteri: Array.isArray(p.musteri) ? p.musteri : [],
-                        toptanci: Array.isArray(p.toptanci) ? p.toptanci : []
+                        musteri: Array.isArray(parsed.musteri) ? parsed.musteri : [],
+                        toptanci: Array.isArray(parsed.toptanci) ? parsed.toptanci : []
                     };
                 } catch(e) {
                     return { musteri: [], toptanci: [] };
@@ -194,38 +260,10 @@
             listele();
         }
 
-        function topluEkleToggle() {
-            document.getElementById('tekliForm').classList.toggle('hidden');
-            document.getElementById('topluForm').classList.toggle('hidden');
-        }
-
         function kayitEkle() {
-            const ad = document.getElementById('mAdInput').value.trim();
-            const tel = document.getElementById('mTelInput').value.trim();
-            const bak = parseFloat(document.getElementById('mBakInput').value) || 0;
+            const adEl = document.getElementById('mAdInput');
+            const telEl = document.getElementById('mTelInput');
+            const bakEl = document.getElementById('mBakInput');
 
-            if (!ad) {
-                alert('Lütfen isim yazın.');
-                return;
-            }
-
-            const db = veriOku();
-            db[aktifSekme].unshift({
-                id: String(Date.now()),
-                unvan: ad,
-                telefon: tel,
-                bakiye: bak,
-                hareketler: bak !== 0 ? [{ 
-                    tarih: new Date().toLocaleDateString('tr-TR'), 
-                    aciklama: 'Açılış Bakiyesi', 
-                    tip: bak > 0 ? 'verdim' : 'aldim', 
-                    tutar: Math.abs(bak) 
-                }] : []
-            });
-
-            veriYaz(db);
-            document.getElementById('mAdInput').value = '';
-            document.getElementById('mTelInput').value = '';
-            document.getElementById('mBakInput').value = '';
-            list
+            const ad =
         
