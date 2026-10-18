@@ -25,7 +25,7 @@
         <!-- Yeni Müşteri Ekle -->
         <section class="bg-white p-4 rounded-xl shadow-sm border">
             <h2 class="text-sm font-bold text-gray-700 mb-3 border-b pb-2">Yeni Müşteri Ekle</h2>
-            <form id="cariForm" class="space-y-3">
+            <form id="cariForm" onsubmit="event.preventDefault(); cariEkle();" class="space-y-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Müşteri Adı / Unvan</label>
                     <input type="text" id="unvan" required placeholder="Ahmet Yılmaz" class="w-full p-2 border rounded text-sm outline-none focus:border-blue-500">
@@ -80,7 +80,7 @@
                     <h3 id="modalUnvan" class="font-bold text-gray-800 text-base">Müşteri Adı</h3>
                     <p id="modalTelefon" class="text-xs text-gray-500"></p>
                 </div>
-                <button onclick="modalKapat()" class="text-gray-400 hover:text-gray-600 text-lg font-bold px-2">✕</button>
+                <button type="button" onclick="modalKapat()" class="text-gray-400 hover:text-gray-600 text-lg font-bold px-2">✕</button>
             </div>
 
             <!-- Bakiye Durumu -->
@@ -89,14 +89,14 @@
                 <span id="modalBakiye" class="text-xl font-black text-blue-600">0.00 TL</span>
             </div>
 
-            <!-- Borç / Tahsilat Ekleme Formu -->
+            <!-- Borç / Tahsilat Ekleme Alanı -->
             <div class="bg-blue-50 p-3 rounded border border-blue-100 space-y-2">
-                <h4 class="text-xs font-bold text-blue-900">İşlem Ekle (Borç / Tahsilat)</h4>
+                <h4 class="text-xs font-bold text-blue-900">BORÇ / ÖDEME EKLE</h4>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[11px] font-medium text-gray-600">İşlem Türü</label>
+                        <label class="block text-[11px] font-medium text-gray-600">İşlem Tipi</label>
                         <select id="islemTipi" class="w-full p-2 border rounded text-xs bg-white outline-none">
-                            <option value="borc">Borçlandır (+ Ekle)</option>
+                            <option value="borc">Borç Yaz (+ Artır)</option>
                             <option value="alacak">Tahsilat / Ödeme (- Düş)</option>
                         </select>
                     </div>
@@ -107,22 +107,23 @@
                 </div>
                 <div>
                     <label class="block text-[11px] font-medium text-gray-600">Açıklama</label>
-                    <input type="text" id="islemAciklama" placeholder="Örn: Ürün satışı / Ödeme" class="w-full p-2 border rounded text-xs outline-none bg-white">
+                    <input type="text" id="islemAciklama" placeholder="Örn: Servis bedeli" class="w-full p-2 border rounded text-xs outline-none bg-white">
                 </div>
-                <button onclick="islemKaydet()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded text-xs shadow">
-                    İşlemi Kaydet ve Hesapla
+                <button type="button" id="btnIslemKaydet" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded text-xs shadow">
+                    İşlemi Kaydet
                 </button>
             </div>
 
             <!-- İşlem Geçmişi -->
             <div>
-                <h4 class="text-xs font-bold text-gray-700 mb-2">İşlem Geçmişi</h4>
+                <h4 class="text-xs font-bold text-gray-700 mb-2">Hesap Hareket Geçmişi</h4>
                 <div class="max-h-40 overflow-y-auto border rounded">
                     <table class="w-full text-left text-[11px]">
                         <thead class="bg-gray-100 text-gray-600">
                             <tr>
                                 <th class="p-1.5">Tarih</th>
                                 <th class="p-1.5">Açıklama</th>
+                                <th class="p-1.5">Tip</th>
                                 <th class="p-1.5 text-right">Tutar</th>
                             </tr>
                         </thead>
@@ -137,11 +138,19 @@
     </div>
 
     <script>
-        const DB_KEY = 'turkalp_cari_db_v3';
+        const DB_KEY = 'turkalp_cari_db_v4';
         let seciliCariId = null;
 
-        // Sayfa Yüklendiğinde Verileri Getir
-        document.addEventListener('DOMContentLoaded', carileriListele);
+        document.addEventListener('DOMContentLoaded', function() {
+            carileriListele();
+            
+            // Butona tıklama dinleyicisini doğrudan bağlayarak sayfa yenilenmesini engelliyoruz
+            document.getElementById('btnIslemKaydet').onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                islemKaydet();
+            };
+        });
 
         function verileriOku() {
             const data = localStorage.getItem(DB_KEY);
@@ -153,8 +162,7 @@
         }
 
         // Yeni Müşteri Kaydet
-        document.getElementById('cariForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        function cariEkle() {
             const unvan = document.getElementById('unvan').value.trim();
             const telefon = document.getElementById('telefon').value.trim();
             const bakiye = parseFloat(document.getElementById('bakiye').value) || 0;
@@ -162,169 +170,5 @@
             if (!unvan) return;
 
             const liste = verileriOku();
-            const yeniMusteri = {
-                id: Number(Date.now()),
-                unvan: unvan,
-                telefon: telefon,
-                bakiye: Number(bakiye),
-                hareketler: bakiye !== 0 ? [{
-                    tarih: new Date().toLocaleDateString('tr-TR'),
-                    aciklama: 'Açılış Bakiyesi',
-                    tip: bakiye > 0 ? 'borc' : 'alacak',
-                    tutar: Math.abs(Number(bakiye))
-                }] : []
-            };
-
-            liste.push(yeniMusteri);
-            verileriYaz(liste);
-
-            this.reset();
-            carileriListele();
-        });
-
-        // Müşterileri Ekrana Bas
-        function carileriListele() {
-            const liste = verileriOku();
-            const tbody = document.getElementById('cariListesi');
-            document.getElementById('toplamCari').textContent = `Toplam: ${liste.length}`;
-            tbody.innerHTML = '';
-
-            if (liste.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-3 text-gray-400">Müşteri bulunmuyor.</td></tr>`;
-                return;
-            }
-
-            liste.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-blue-50 cursor-pointer';
-                const bak = Number(item.bakiye);
-                
-                tr.innerHTML = `
-                    <td class="p-2 font-semibold text-gray-800" onclick="detayAcar(${item.id})">${item.unvan}</td>
-                    <td class="p-2 text-gray-500" onclick="detayAcar(${item.id})">${item.telefon || '-'}</td>
-                    <td class="p-2 font-bold ${bak > 0 ? 'text-red-600' : (bak < 0 ? 'text-green-600' : 'text-gray-600')}" onclick="detayAcar(${item.id})">
-                        ${bak.toFixed(2)} TL
-                    </td>
-                    <td class="p-2 text-center">
-                        <button onclick="cariSil(${item.id})" class="text-red-500 font-bold px-2">✕</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Müşteri Detay Pop-up'ını Aç
-        function detayAcar(id) {
-            seciliCariId = id;
-            const liste = verileriOku();
-            const musteri = liste.find(m => m.id === id);
-            if (!musteri) return;
-
-            document.getElementById('modalUnvan').textContent = musteri.unvan;
-            document.getElementById('modalTelefon').textContent = musteri.telefon || 'Telefon yok';
-
-            const bakiyeEl = document.getElementById('modalBakiye');
-            const bak = Number(musteri.bakiye);
-            bakiyeEl.textContent = `${bak.toFixed(2)} TL`;
-            bakiyeEl.className = `text-xl font-black ${bak > 0 ? 'text-red-600' : (bak < 0 ? 'text-green-600' : 'text-gray-600')}`;
-
-            hareketleriGoster(musteri.hareketler || []);
-            document.getElementById('detayModal').classList.remove('hidden');
-        }
-
-        function modalKapat() {
-            document.getElementById('detayModal').classList.add('hidden');
-            seciliCariId = null;
-        }
-
-        // Borç veya Tahsilat Ekleme ve Bakiye Hesaplama
-        function islemKaydet() {
-            if (!seciliCariId) return;
-
-            const tip = document.getElementById('islemTipi').value;
-            const tutarInput = document.getElementById('islemTutar').value;
-            const tutar = parseFloat(tutarInput);
-            const aciklamaInput = document.getElementById('islemAciklama').value.trim();
-
-            if (isNaN(tutar) || tutar <= 0) {
-                alert('Lütfen geçerli bir tutar giriniz!');
-                return;
-            }
-
-            const aciklama = aciklamaInput || (tip === 'borc' ? 'Borç Eklendi' : 'Tahsilat Yapıldı');
-
-            const liste = verileriOku();
-            const index = liste.findIndex(m => m.id === seciliCariId);
-
-            if (index !== -1) {
-                // Matematiksel Hesaplama
-                let mevcutBakiye = Number(liste[index].bakiye) || 0;
-                
-                if (tip === 'borc') {
-                    mevcutBakiye += tutar; // Borç eklenince bakiye artar
-                } else {
-                    mevcutBakiye -= tutar; // Tahsilat yapılınca bakiye düşer
-                }
-
-                liste[index].bakiye = mevcutBakiye;
-
-                if (!liste[index].hareketler) {
-                    liste[index].hareketler = [];
-                }
-
-                liste[index].hareketler.unshift({
-                    tarih: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour: '2-2', minute:'2-2'}),
-                    aciklama: aciklama,
-                    tip: tip,
-                    tutar: tutar
-                });
-
-                verileriYaz(liste);
-
-                // Formu temizle
-                document.getElementById('islemTutar').value = '';
-                document.getElementById('islemAciklama').value = '';
-
-                // Ekranı güncelle
-                detayAcar(seciliCariId);
-                carileriListele();
-            }
-        }
-
-        // Geçmiş Hareket Tablosu
-        function hareketleriGoster(hareketler) {
-            const hTbody = document.getElementById('hareketListesi');
-            hTbody.innerHTML = '';
-
-            if (hareketler.length === 0) {
-                hTbody.innerHTML = `<tr><td colspan="3" class="p-2 text-center text-gray-400">İşlem geçmişi yok.</td></tr>`;
-                return;
-            }
-
-            hareketler.forEach(h => {
-                const tr = document.createElement('tr');
-                const t = Number(h.tutar);
-                tr.innerHTML = `
-                    <td class="p-1.5 text-gray-500">${h.tarih}</td>
-                    <td class="p-1.5 font-medium text-gray-700">${h.aciklama}</td>
-                    <td class="p-1.5 text-right font-bold ${h.tip === 'borc' ? 'text-red-600' : 'text-green-600'}">
-                        ${h.tip === 'borc' ? '+' : '-'}${t.toFixed(2)} TL
-                    </td>
-                `;
-                hTbody.appendChild(tr);
-            });
-        }
-
-        // Müşteri Sil
-        function cariSil(id) {
-            if (confirm('Bu müşteriyi ve tüm kayıtlarını silmek istediğinize emin misiniz?')) {
-                let liste = verileriOku();
-                liste = liste.filter(m => m.id !== id);
-                verileriYaz(liste);
-                carileriListele();
-            }
-        }
-    </script>
-</body>
-    </html>
-    
+            const yeni
+        
