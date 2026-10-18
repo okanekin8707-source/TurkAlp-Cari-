@@ -19,9 +19,9 @@
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
 
-        /* Logo ve Başlık Stilleri */
-        .header-container { display: flex; align-items: center; gap: 10px; }
-        .header-logo { height: 40px; width: auto; object-fit: contain; }
+        /* Logo ve Başlık Düzeni */
+        .header-container { display: flex; align-items: center; gap: 12px; }
+        .header-logo { height: 45px; width: 45px; border-radius: 6px; object-fit: cover; background: #fff; border: 1px solid #ddd; }
 
         .baslik-ust { color: #cc0000; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; line-height: 1.1; }
         .baslik-alt { color: #0066cc; font-size: 14px; margin-top: 2px; font-weight: bold; display: block; }
@@ -375,8 +375,8 @@
     <div id="sifreEkrani">
         <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
             <div style="margin-bottom: 15px;">
-                <div class="header-container" style="justify-content: center; margin-bottom: 5px;">
-                    <img src="logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+                <div class="header-container" style="justify-content: center; margin-bottom: 8px;">
+                    <img src="logo.png" alt="Logo" class="header-logo">
                     <h2 class="baslik-ust">TÜRKALP</h2>
                 </div>
                 <span class="baslik-alt">Alacak - Verecek Takibi</span>
@@ -391,7 +391,7 @@
     <div id="anaUygulama" style="display:none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <div class="header-container">
-                <img src="logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+                <img src="logo.png" alt="Logo" class="header-logo">
                 <div>
                     <h2 class="baslik-ust">TÜRKALP</h2>
                     <span class="baslik-alt">Alacak - Verecek Takibi</span>
@@ -414,8 +414,8 @@
             <input type="text" id="yeniAd" placeholder="Müşteri adı...">
             <button onclick="kaydet()">Kaydet</button>
         </div>
-
+        
         <!-- MÜŞTERİ ARAMA KUTUSU -->
         <div class="box">
             <b>Müşteri Ara</b>
-            <input type="text" id="
+            <input type="text" id="aramaK
