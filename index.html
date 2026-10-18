@@ -98,7 +98,7 @@
 
     </main>
 
-    <!-- DETAY MODALI -->
+    <!-- DETAY MODALI (YENİLENMİŞ VE KESİN ÇALIŞAN ALAN) -->
     <div id="detayModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl w-full max-w-sm p-4 space-y-3 shadow-xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-2">
@@ -106,7 +106,7 @@
                     <h3 id="mAd" class="font-bold text-slate-800 text-base">Ad</h3>
                     <p id="mTel" class="text-xs text-slate-400"></p>
                 </div>
-                <button type="button" onclick="modalKapat()" class="text-slate-400 text-lg font-bold px-2">✕</button>
+                <button type="button" onclick="modalKapat()" class="text-slate-400 text-lg font-bold px-2 py-1">✕</button>
             </div>
 
             <div class="bg-slate-50 p-3 rounded-xl text-center border">
@@ -114,6 +114,7 @@
                 <span id="mBakiye" class="text-xl font-extrabold text-blue-600">0.0 ₺</span>
             </div>
 
+            <!-- İşlem Ekleme Formu -->
             <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 space-y-2">
                 <h4 class="text-xs font-bold text-blue-900">İŞLEM EKLE</h4>
                 <div class="grid grid-cols-2 gap-2">
@@ -123,8 +124,8 @@
                     </select>
                     <input type="number" step="0.01" id="iTutar" placeholder="Tutar (₺)" class="p-2 bg-white border rounded-lg text-xs outline-none">
                 </div>
-                <input type="text" id="iAciklama" placeholder="Açıklama" class="w-full p-2 bg-white border rounded-lg text-xs outline-none">
-                <button type="button" onclick="islemEkle()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition">
+                <input type="text" id="iAciklama" placeholder="Açıklama (Örn: Mal satışı)" class="w-full p-2 bg-white border rounded-lg text-xs outline-none">
+                <button type="button" onclick="islemEkle()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
                     İşlemi Kaydet
                 </button>
             </div>
@@ -135,13 +136,13 @@
             </div>
 
             <div class="border-t pt-2 text-right">
-                <button type="button" onclick="kayitSil()" class="text-rose-600 text-xs font-bold">Kaydı Sil</button>
+                <button type="button" onclick="kayitSil()" class="text-rose-600 text-xs font-bold py-1 px-2">Kaydı Sil</button>
             </div>
         </div>
     </div>
 
     <script>
-        const KEY = 'turkalp_muhasebe_v3';
+        const KEY = 'turkalp_muhasebe_v4';
         let aktifSekme = 'musteri';
         let aktifId = null;
 
@@ -172,5 +173,8 @@
                 listeBaslik.innerHTML = 'Müşteriler <span id="sayac" class="text-slate-400 font-normal">(0)</span>';
             } else {
                 tTab.className = "flex-1 py-2.5 rounded-lg bg-white text-blue-600 shadow-sm transition";
-                mTab.className = "flex-1 py-2.5
+                mTab.className = "flex-1 py-2.5 rounded-lg text-slate-500 transition";
+                formBaslik.querySelector('span').innerHTML = '<i class="fa-solid fa-truck-field text-blue-600 mr-1"></i> Yeni Toptancı Ekle';
+                etiketAd.textContent = 'Toptancı / Firma Adı *';
+                listeBaslik.innerHTML = 'Topt
         
