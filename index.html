@@ -13,7 +13,7 @@
         .red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
         .green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
         .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
-        .history { background: white; padding: 6px; border-radius: 4px; margin-top: 4px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; }
+        .history { background: white; padding: 8px; border-radius: 4px; margin-top: 6px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .red { color: #cc0000; font-weight: bold; }
         .green { color: #009933; font-weight: bold; }
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -229,11 +229,12 @@
                         '<b>Hesap Geçmişi:</b>';
 
                     if (m.hareketler && m.hareketler.length > 0) {
-                        m.hareketler.forEach(function(h) {
+                        m.hareketler.forEach(function(h, index) {
                             var hRenk = h.tip === 'verdim' ? 'red' : 'green';
                             icerik += '<div class="history">' +
-                                '<span><b>' + h.aciklama + '</b> <small>(' + h.tarih + ')</small></span>' +
-                                '<span class="' + hRenk + '">' + (h.tip === 'verdim' ? '+' : '-') + Number(h.tutar).toFixed(2) + ' ₺</span>' +
+                                '<div><b>' + h.aciklama + '</b> <small>(' + h.tarih + ')</small><br>' +
+                                '<span class="' + hRenk + '">' + (h.tip === 'verdim' ? '+' : '-') + Number(h.tutar).toFixed(2) + ' ₺</span></div>' +
+                                '<button onclick="event.stopPropagation(); hareketSil(\'' + m.id + '\', ' + index + ')" style="width:auto; padding:4px 8px; background:#cc0000; font-size:11px;">Sil</button>' +
                             '</div>';
                         });
                     } else {
@@ -241,7 +242,7 @@
                     }
 
                     icerik += '<div style="text-align:right; margin-top:8px;">' +
-                        '<button onclick="musteriSil(\'' + m.id + '\')" style="width:auto; padding:6px 12px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
+                        '<button onclick="event.stopPropagation(); musteriSil(\'' + m.id + '\')" style="width:auto; padding:6px 12px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
                     '</div>';
 
                     icerik += '</div>';
@@ -306,6 +307,40 @@
                 } catch (e) {
                     console.error("İşlem hatası: ", e);
                     alert("İşlem kaydedilirken hata oluştu.");
+                    if (yukleniyor) yukleniyor.style.display = 'none';
+                }
+            }
+        };
+
+        window.hareketSil = async function(musteriId, hareketIndex) {
+            if (!confirm("Bu işlemi silmek istediğinize emin misiniz? Bakiye buna göre güncellenecektir.")) {
+                return;
+            }
+
+            var index = globalListe.findIndex(function(x) { return String(x.id) === String(musteriId); });
+            if (index !== -1) {
+                var musteri = globalListe[index];
+                var silinecekHareket = musteri.hareketler[hareketIndex];
+
+                var mevcutBakiye = Number(musteri.bakiye) || 0;
+                if (silinecekHareket.tip === 'verdim') {
+                    mevcutBakiye -= Number(silinecekHareket.tutar);
+                } else {
+                    mevcutBakiye += Number(silinecekHareket.tutar);
+                }
+
+                musteri.bakiye = mevcutBakiye;
+                musteri.hareketler.splice(hareketIndex, 1);
+
+                var yukleniyor = document.getElementById('yukleniyor');
+                if (yukleniyor) yukleniyor.style.display = 'block';
+                try {
+                    await setDoc(doc(db, "musteriler", musteriId), musteri);
+                    await verileriBuluttanCek();
+                    alert("İşlem silindi ve bakiye güncellendi!");
+                } catch (e) {
+                    console.error("İşlem silme hatası: ", e);
+                    alert("İşlem silinirken hata oluştu.");
                     if (yukleniyor) yukleniyor.style.display = 'none';
                 }
             }
