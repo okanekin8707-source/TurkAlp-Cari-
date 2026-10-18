@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TürkAlp Teknoloji - Müşteri Takip v20</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip v21</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
@@ -18,7 +18,7 @@
 </head>
 <body>
 
-    <h2 style="text-align:center; color:#0066cc; margin-bottom:10px;">TürkAlp Müşteri Takip v20</h2>
+    <h2 style="text-align:center; color:#0066cc; margin-bottom:10px;">TürkAlp Müşteri Takip v21</h2>
 
     <!-- YENİ MÜŞTERİ EKLEME -->
     <div class="box">
@@ -104,7 +104,6 @@
             var container = document.getElementById('listeContainer');
             container.innerHTML = "";
 
-            // Arama filtresi uygula
             var filtrelenmisListe = liste.filter(function(m) {
                 return m.ad.toLowerCase().includes(aramaMetni);
             });
@@ -121,13 +120,22 @@
                 var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
                 var durumMetni = bakiye > 0 ? 'Borçlu (Sana)' : (bakiye < 0 ? 'Alacaklı (Senden)' : 'Dengede');
 
+                // Açılış bakiyesini ilk hareketten veya ilk kaydedilen değerden bulalım
+                var acilisBakiyeText = '';
+                if (m.hareketler && m.hareketler.length > 0) {
+                    var acilisHareketi = m.hareketler.slice().reverse().find(function(h) { return h.aciklama === 'Açılış Bakiyesi'; });
+                    if (acilisHareketi) {
+                        acilisBakiyeText = ' | Açılış: ' + Number(acilisHareketi.tutar).toFixed(2) + ' ₺';
+                    }
+                }
+
                 var div = document.createElement('div');
                 div.className = 'kisi';
                 
                 var icerik = '<div onclick="sec(\'' + m.id + '\')" style="display:flex; justify-content:space-between; align-items:center;">' +
                     '<div>' +
                         '<b style="font-size:15px;">' + m.ad + '</b><br>' +
-                        '<span style="font-size:12px; color:#666;">' + (m.tel || 'Telefon yok') + '</span>' +
+                        '<span style="font-size:11px; color:#666;">Tel: ' + (m.tel || 'Yok') + acilisBakiyeText + '</span>' +
                     '</div>' +
                     '<div style="text-align:right;">' +
                         '<span class="' + renk + '" style="font-size:15px;">' + Math.abs(bakiye).toFixed(2) + ' ₺</span><br>' +
