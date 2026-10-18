@@ -11,21 +11,19 @@
         button { width: 100%; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
         
         .kisi { background: white; padding: 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #ddd; cursor: pointer; }
-        .kisi.red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
-        .kisi.green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
+        .red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
+        .green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
         
         .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
-        .history { background: white; padding: 6px 8px; border-radius: 4px; margin-top: 4px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .history { background: white; padding: 8px; border-radius: 4px; margin-top: 4px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .red { color: #cc0000; font-weight: bold; }
         .green { color: #009933; font-weight: bold; }
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
 
-        /* Başlık Stili */
         .baslik-ust { color: #cc0000; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; line-height: 1.1; }
         .baslik-alt { color: #0066cc; font-size: 14px; margin-top: 2px; font-weight: bold; display: block; }
 
-        /* Menü Stilleri */
         .menu-container { position: relative; display: inline-block; }
         .menu-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 140px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; border-radius: 6px; border: 1px solid #ccc; overflow: hidden; }
         .menu-content button { background: white; color: #333; text-align: left; padding: 10px; border-radius: 0; border-bottom: 1px solid #eee; }
@@ -134,7 +132,7 @@
                 globalListe.sort((a, b) => b.timestamp - a.timestamp);
             } catch (e) {
                 console.error("Veri çekme hatası: ", e);
-                alert("Buluttan veriler yüklenirken bir hata oluştu.");
+                alert("Buluttan veriler yüklenirken hata oluştu.");
             }
             document.getElementById('yukleniyor').style.display = 'none';
             listeyiEkranaBas();
@@ -163,7 +161,7 @@
                 await setDoc(doc(db, "musteriler", idVal), yeniMusteri);
                 adInput.value = "";
                 await verileriBuluttanCek();
-                alert("Müşteri buluta başarıyla kaydedildi!");
+                alert("Müşteri kaydedildi!");
             } catch (e) {
                 console.error("Kayıt hatası: ", e);
                 alert("Kayıt sırasında hata oluştu.");
@@ -231,155 +229,5 @@
                                 '<div><b>' + h.aciklama + '</b> <small>(' + h.tarih + ')</small><br>' +
                                 '<span class="' + hRenk + '">' + (h.tip === 'verdim' ? '+' : '-') + Number(h.tutar).toFixed(2) + ' ₺</span></div>' +
                                 '<button onclick="hareketSil(\'' + m.id + '\', ' + index + ')" style="width:auto; padding:4px 8px; background:#cc0000; font-size:11px;">Sil</button>' +
-                            '</div>';
-                        });
-                    } else {
-                        icerik += '<div style="font-size:12px; color:#777; margin-top:4px;">İşlem geçmişi yok.</div>';
-                    }
-
-                    icerik += '<div style="text-align:right; margin-top:10px;">' +
-                        '<button onclick="musteriSil(\'' + m.id + '\')" style="width:auto; padding:6px 12px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
-                    '</div>';
-
-                    icerik += '</div>';
-                }
-
-                div.innerHTML = icerik;
-                container.appendChild(div);
-            });
-        };
-
-        window.sec = function(id) {
-            if (seciliMusteriId === id) {
-                seciliMusteriId = null;
-            } else {
-                seciliMusteriId = id;
-            }
-            listeyiEkranaBas();
-        };
-
-        window.islemYap = async function(id) {
-            var tip = document.getElementById('islemTip_' + id).value;
-            var tutarVal = document.getElementById('islemTutar_' + id).value;
-            var aciklamaVal = document.getElementById('islemAciklama_' + id).value.trim();
-
-            var tutar = parseFloat(tutarVal);
-            if (isNaN(tutar) || tutar <= 0) {
-                alert("Lütfen geçerli bir tutar giriniz!");
-                return;
-            }
-
-            if (!aciklamaVal) {
-                aciklamaVal = tip === 'verdim' ? 'Mal/Borç Verildi' : 'Tahsilat Alındı';
-            }
-
-            var index = globalListe.findIndex(function(x) { return String(x.id) === String(id); });
-
-            if (index !== -1) {
-                var mevcutBakiye = Number(globalListe[index].bakiye) || 0;
-
-                if (tip === 'verdim') {
-                    mevcutBakiye += tutar;
-                } else {
-                    mevcutBakiye -= tutar;
-                }
-
-                globalListe[index].bakiye = mevcutBakiye;
-                if (!globalListe[index].hareketler) globalListe[index].hareketler = [];
-
-                globalListe[index].hareketler.unshift({
-                    tarih: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
-                    aciklama: aciklamaVal,
-                    tip: tip,
-                    tutar: tutar
-                });
-
-                document.getElementById('yukleniyor').style.display = 'block';
-                try {
-                    await setDoc(doc(db, "musteriler", id), globalListe[index]);
-                    await verileriBuluttanCek();
-                    alert("İşlem buluta başarıyla kaydedildi!");
-                } catch (e) {
-                    console.error("İşlem hatası: ", e);
-                    alert("İşlem kaydedilirken hata oluştu.");
-                    document.getElementById('yukleniyor').style.display = 'none';
-                }
-            }
-        };
-
-        window.hareketSil = async function(musteriId, hareketIndex) {
-            if (!confirm("Bu işlemi silmek istediğinize emin misiniz? Bakiye buna göre güncellenecektir.")) {
-                return;
-            }
-
-            var index = globalListe.findIndex(function(x) { return String(x.id) === String(musteriId); });
-            if (index !== -1) {
-                var musteri = globalListe[index];
-                var silinecekHareket = musteri.hareketler[hareketIndex];
-
-                // Bakiyeyi geri al
-                var mevcutBakiye = Number(musteri.bakiye) || 0;
-                if (silinecekHareket.tip === 'verdim') {
-                    mevcutBakiye -= Number(silinecekHareket.tutar);
-                } else {
-                    mevcutBakiye += Number(silinecekHareket.tutar);
-                }
-
-                musteri.bakiye = mevcutBakiye;
-                musteri.hareketler.splice(hareketIndex, 1); // Listeden sil
-
-                document.getElementById('yukleniyor').style.display = 'block';
-                try {
-                    await setDoc(doc(db, "musteriler", musteriId), musteri);
-                    await verileriBuluttanCek();
-                    alert("İşlem silindi ve bakiye güncellendi!");
-                } catch (e) {
-                    console.error("İşlem silme hatası: ", e);
-                    alert("İşlem silinirken hata oluştu.");
-                    document.getElementById('yukleniyor').style.display = 'none';
-                }
-            }
-        };
-
-        window.musteriSil = async function(id) {
-            if (confirm("Bu müşteriyi silmek istediğinize emin misiniz?")) {
-                document.getElementById('yukleniyor').style.display = 'block';
-                try {
-                    await deleteDoc(doc(db, "musteriler", id));
-                    seciliMusteriId = null;
-                    await verileriBuluttanCek();
-                    alert("Müşteri silindi!");
-                } catch (e) {
-                    console.error("Silme hatası: ", e);
-                    alert("Silme sırasında hata oluştu.");
-                    document.getElementById('yukleniyor').style.display = 'none';
-                }
-            }
-        };
-    </script>
-</head>
-<body>
-
-    <!-- ŞİFRE GİRİŞ EKRANI -->
-    <div id="sifreEkrani">
-        <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
-            <div style="margin-bottom: 15px;">
-                <h2 class="baslik-ust">TÜRKALP</h2>
-                <span class="baslik-alt">Alacak - Verecek Takibi</span>
-            </div>
-            <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
-            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
-            <button onclick="sifreKontrol()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <!-- ANA UYGULAMA -->
-    <div id="anaUygulama" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <div>
-                <h2 class="baslik-ust">TÜRKALP</h2>
-                <span class="baslik-alt">Alacak - Verecek Takibi</span>
-            </div>
-            
-            <!--
-    
+                            '</div>
+        
