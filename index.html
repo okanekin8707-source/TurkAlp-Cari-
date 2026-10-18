@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TürkAlp Teknoloji - Müşteri Takip v14</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip v15</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,13 +14,13 @@
 </head>
 <body class="bg-slate-100 text-slate-800 pb-24 select-none">
 
-    <!-- ÜST HEADER (Sürüm Bilgisi Eklendi) -->
+    <!-- ÜST HEADER -->
     <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-30 flex justify-between items-center">
         <div class="flex items-center gap-2">
             <i class="fa-solid fa-users text-xl"></i>
             <div>
                 <h1 class="font-bold text-sm leading-tight">TürkAlp Teknoloji</h1>
-                <span class="text-[10px] text-blue-200 font-bold bg-blue-800 px-1.5 py-0.5 rounded">Versiyon 14 (v14)</span>
+                <span class="text-[10px] text-blue-200 font-bold bg-blue-800 px-1.5 py-0.5 rounded">Versiyon 15 (v15)</span>
             </div>
         </div>
         <button type="button" onclick="yedekIndir()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-2.5 py-1.5 rounded-lg border border-blue-500 transition" title="Yedek Al">
@@ -33,7 +33,7 @@
         <!-- YENİ MÜŞTERİ EKLEME KARTI -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
             <h2 class="font-bold text-slate-700 text-sm flex items-center gap-1.5 border-b pb-2">
-                <i class="fa-solid fa-user-plus text-blue-600"></i> Yeni Müşteri Ekle (v14)
+                <i class="fa-solid fa-user-plus text-blue-600"></i> Yeni Müşteri Ekle (v15)
             </h2>
 
             <form onsubmit="musteriEkle(event)" class="space-y-3">
@@ -104,7 +104,7 @@
                 <span id="mdlDurum" class="text-xs font-semibold block">Dengede</span>
             </div>
 
-            <!-- İşlem Ekleme Paneli (Form yerine düz div ve onclick buton yapıldı) -->
+            <!-- İşlem Ekleme Paneli -->
             <div class="bg-blue-50 p-3.5 rounded-2xl border border-blue-100 space-y-3">
                 <h4 class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
                     <i class="fa-solid fa-file-invoice-dollar text-blue-600"></i> İŞLEM / MALZEME EKLE
@@ -113,8 +113,8 @@
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 mb-0.5">İşlem Türü</label>
                         <select id="islemTip" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs outline-none font-medium">
-                            <option value="verdim">Mal/Borç Verdim (+)</option>
-                            <option value="aldim">Para/Tahsilat Aldım (-)</option>
+                            <option value="verdim">Mal / Borç Verdim (+ Artırır)</option>
+                            <option value="aldim">Para / Tahsilat Aldım (- Düşer)</option>
                         </select>
                     </div>
                     <div>
@@ -148,5 +148,243 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT KOD
-    
+    <!-- JAVASCRIPT KODU (v15) -->
+    <script>
+        const KEY = 'turkalp_sade_musteri_db_v15';
+        let seciliId = null;
+
+        window.onload = function() {
+            listele();
+        };
+
+        function oku() {
+            const raw = localStorage.getItem(KEY);
+            if (!raw) return [];
+            try { return JSON.parse(raw); } catch(e) { return []; }
+        }
+
+        function yaz(data) {
+            localStorage.setItem(KEY, JSON.stringify(data));
+        }
+
+        function musteriEkle(e) {
+            e.preventDefault();
+            const ad = document.getElementById('inpAd').value.trim();
+            const tel = document.getElementById('inpTel').value.trim();
+            const bakiye = parseFloat(document.getElementById('inpBakiye').value) || 0;
+
+            if (!ad) return;
+
+            const db = oku();
+            db.unshift({
+                id: 'm_' + Date.now(),
+                ad: ad,
+                tel: tel,
+                bakiye: bakiye,
+                hareketler: bakiye !== 0 ? [{
+                    tarih: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour:'2-2', minute:'2-2'}),
+                    aciklama: 'Açılış Bakiyesi',
+                    tip: bakiye > 0 ? 'verdim' : 'aldim',
+                    tutar: Math.abs(bakiye)
+                }] : []
+            });
+
+            yaz(db);
+            document.getElementById('inpAd').value = '';
+            document.getElementById('inpTel').value = '';
+            document.getElementById('inpBakiye').value = '';
+            listele();
+        }
+
+        function listele() {
+            const db = oku();
+            const arama = document.getElementById('inpArama').value.toLowerCase();
+            const container = document.getElementById('listeContainer');
+            container.innerHTML = '';
+
+            let topAlacak = 0;
+            let topBorc = 0;
+
+            const filtrelenmis = db.filter(m => m.ad.toLowerCase().includes(arama));
+            document.getElementById('lblSayac').textContent = `(${filtrelenmis.length})`;
+
+            if (filtrelenmis.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">Kayıtlı müşteri bulunamadı.</div>`;
+            }
+
+            filtrelenmis.forEach(m => {
+                const b = Number(m.bakiye) || 0;
+                if (b > 0) topAlacak += b;
+                if (b < 0) topBorc += Math.abs(b);
+
+                let renk = b > 0 ? 'text-rose-600' : (b < 0 ? 'text-emerald-600' : 'text-slate-400');
+                let durum = b > 0 ? 'Borçlu (Sana)' : (b < 0 ? 'Alacaklı (Senden)' : 'Dengede');
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-blue-50/60 transition shadow-xs";
+                card.onclick = function() { detayAç(m.id); };
+
+                card.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">${m.ad}</h4>
+                        <p class="text-xs text-slate-400"><i class="fa-solid fa-phone mr-1 text-[10px]"></i>${m.tel || 'Telefon yok'}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-extrabold text-sm block ${renk}">${Math.abs(b).toFixed(2)} ₺</span>
+                        <span class="text-[10px] font-bold ${renk}">${durum}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('ozetAlacak').textContent = `${topAlacak.toFixed(2)} ₺`;
+            document.getElementById('ozetBorc').textContent = `${topBorc.toFixed(2)} ₺`;
+        }
+
+        function detayAç(id) {
+            seciliId = id;
+            const db = oku();
+            const m = db.find(x => x.id === id);
+            if (!m) return;
+
+            document.getElementById('mdlAd').textContent = m.ad;
+            document.getElementById('mdlTel').textContent = m.tel ? 'Tel: ' + m.tel : 'Telefon yok';
+
+            const b = Number(m.bakiye) || 0;
+            const bEl = document.getElementById('mdlBakiye');
+            const dEl = document.getElementById('mdlDurum');
+
+            bEl.textContent = `${Math.abs(b).toFixed(2)} ₺`;
+            if (b > 0) {
+                dEl.textContent = 'Müşteri Size Borçludur';
+                dEl.className = 'text-xs font-semibold text-rose-400 block';
+            } else if (b < 0) {
+                dEl.textContent = 'Müşteri Sizden Alacaklıdır';
+                dEl.className = 'text-xs font-semibold text-emerald-400 block';
+            } else {
+                dEl.textContent = 'Hesap Dengededir (0.00 ₺)';
+                dEl.className = 'text-xs font-semibold text-slate-400 block';
+            }
+
+            hareketCiz(m.hareketler || []);
+            document.getElementById('detayModal').classList.remove('hidden');
+        }
+
+        function modalKapat() {
+            document.getElementById('detayModal').classList.add('hidden');
+            seciliId = null;
+        }
+
+        function islemKaydetTikla() {
+            if (!seciliId) return;
+
+            const tip = document.getElementById('islemTip').value;
+            const tutarInput = document.getElementById('islemTutar');
+            const tutar = parseFloat(tutarInput.value);
+            const aciklamaInput = document.getElementById('islemAciklama');
+            const aciklama = aciklamaInput.value.trim() || (tip === 'verdim' ? 'Mal/Borç Verildi' : 'Tahsilat Alındı');
+
+            if (isNaN(tutar) || tutar <= 0) {
+                alert('Lütfen geçerli bir tutar yazınız.');
+                tutarInput.focus();
+                return;
+            }
+
+            const db = oku();
+            const idx = db.findIndex(x => x.id === seciliId);
+
+            if (idx !== -1) {
+                let bak = Number(db[idx].bakiye) || 0;
+                
+                // Kesin matematiksel hesaplama:
+                if (tip === 'verdim') {
+                    bak += tutar; // Borcu artırır (+)
+                } else {
+                    bak -= tutar; // Borcu düşürür / alacağı artırır (-)
+                }
+
+                db[idx].bakiye = bak;
+                if (!db[idx].hareketler) db[idx].hareketler = [];
+
+                db[idx].hareketler.unshift({
+                    tarih: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour:'2-2', minute:'2-2'}),
+                    aciklama: aciklama,
+                    tip: tip,
+                    tutar: tutar
+                });
+
+                yaz(db);
+                tutarInput.value = '';
+                aciklamaInput.value = '';
+                
+                detayAç(seciliId);
+                listele();
+            }
+        }
+
+        function hareketCiz(liste) {
+            const container = document.getElementById('mdlHareketler');
+            container.innerHTML = '';
+
+            if (liste.length === 0) {
+                container.innerHTML = `<div class="text-center py-3 text-xs text-slate-400">İşlem geçmişi yok.</div>`;
+                return;
+            }
+
+            liste.forEach(h => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex justify-between items-center text-xs";
+                const renk = h.tip === 'verdim' ? 'text-rose-600' : 'text-emerald-600';
+
+                div.innerHTML = `
+                    <div>
+                        <span class="font-bold text-slate-700 block">${h.aciklama}</span>
+                        <span class="text-[10px] text-slate-400">${h.tarih}</span>
+                    </div>
+                    <span class="font-extrabold ${renk}">${h.tip === 'verdim' ? '+' : '-'}${Number(h.tutar).toFixed(2)} ₺</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function duzenlePrompt() {
+            const db = oku();
+            const m = db.find(x => x.id === seciliId);
+            if (!m) return;
+
+            const yeniAd = prompt("Müşteri Adını Güncelleyin:", m.ad);
+            if (!yeniAd) return;
+            const yeniTel = prompt("Telefon Numarasını Güncelleyin:", m.tel || "");
+
+            const idx = db.findIndex(x => x.id === seciliId);
+            if (idx !== -1) {
+                db[idx].ad = yeniAd.trim();
+                db[idx].tel = yeniTel ? yeniTel.trim() : '';
+                yaz(db);
+                detayAç(seciliId);
+                listele();
+            }
+        }
+
+        function musteriSil() {
+            if (confirm('Bu müşteriyi ve tüm hesap geçmişini silmek istediğinize emin misiniz?')) {
+                let db = oku();
+                db = db.filter(x => x.id !== seciliId);
+                yaz(db);
+                modalKapat();
+                listele();
+            }
+        }
+
+        function yedekIndir() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem(KEY) || "[]");
+            const a = document.createElement('a');
+            a.setAttribute("href", dataStr);
+            a.setAttribute("download", "turkalp_musteri_yedek.json");
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+    </script>
+</body>
+</html>
