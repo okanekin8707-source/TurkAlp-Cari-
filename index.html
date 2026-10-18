@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TürkAlp Teknoloji - Müşteri Takip v27</title>
+    <title>TürkAlp Müşteri Takip v28</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
         .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
@@ -17,10 +17,6 @@
         #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
         
-        /* Logo ve Başlık Stili */
-        .header-area { display: flex; align-items: center; gap: 10px; }
-        .logo-img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1px solid #0066cc; }
-
         /* Menü Stilleri */
         .menu-container { position: relative; display: inline-block; }
         .menu-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 140px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; border-radius: 6px; border: 1px solid #ccc; overflow: hidden; }
@@ -196,32 +192,5 @@
                         '<b style="font-size:16px;">' + m.ad + '</b>' +
                     '</div>' +
                     '<div style="text-align:right;">' +
-                        '<span class="' + renk + '" style="font-size:15px;">' + Math.abs(bakiye).toFixed(2) + ' ₺</span><br>' +
-                        '<span style="font-size:11px;" class="' + renk + '">' + durumMetni + '</span>' +
-                    '</div>' +
-                '</div>';
-
-                if (String(m.id) === String(seciliMusteriId)) {
-                    icerik += '<div class="panel">' +
-                        '<b>İşlem / Malzeme Ekle</b><br>' +
-                        '<label>İşlem Türü:</label>' +
-                        '<select id="islemTip_' + m.id + '">' +
-                            '<option value="verdim">Mal/Borç Verdim (+ Artırır)</option>' +
-                            '<option value="aldim">Para/Tahsilat Aldım (- Düşer)</option>' +
-                        '</select>' +
-                        '<label>Tutar (₺):</label>' +
-                        '<input type="number" step="0.01" id="islemTutar_' + m.id + '" placeholder="0.00">' +
-                        '<label>Açıklama:</label>' +
-                        '<input type="text" id="islemAciklama_' + m.id + '" placeholder="Örn: Nakit / Malzeme">' +
-                        '<button onclick="islemYap(\'' + m.id + '\')" style="background:#009933;">İşlemi Kaydet ve Hesapla</button>' +
-                        
-                        '<hr style="margin:10px 0; border:0; border-top:1px solid #ccc;">' +
-                        '<b>Hesap Geçmişi:</b>';
-
-                    if (m.hareketler && m.hareketler.length > 0) {
-                        m.hareketler.forEach(function(h) {
-                            var hRenk = h.tip === 'verdim' ? 'red' : 'green';
-                            icerik += '<div class="history">' +
-                                '<span><b>' + h.aciklama + '</b> <small>(' + h.tarih + ')</small></span>' +
-                                '<span class="' + hRenk + '">' + (h.tip === 'verdim' ? '+' : '-') + Number(h.tutar).toFixed(2)
-        
+                        '<span class="' + renk + '" style="font-size:15px;">' + Math.abs(bakiye).toFixed(2
+                                                                                                         
