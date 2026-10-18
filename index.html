@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TürkAlp Teknoloji - Müşteri Takip v15</title>
+    <title>TürkAlp Teknoloji - Müşteri Takip v16</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,7 +20,7 @@
             <i class="fa-solid fa-users text-xl"></i>
             <div>
                 <h1 class="font-bold text-sm leading-tight">TürkAlp Teknoloji</h1>
-                <span class="text-[10px] text-blue-200 font-bold bg-blue-800 px-1.5 py-0.5 rounded">Versiyon 15 (v15)</span>
+                <span class="text-[10px] text-blue-200 font-bold bg-blue-800 px-1.5 py-0.5 rounded">Versiyon 16 (v16)</span>
             </div>
         </div>
         <button type="button" onclick="yedekIndir()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-2.5 py-1.5 rounded-lg border border-blue-500 transition" title="Yedek Al">
@@ -33,7 +33,7 @@
         <!-- YENİ MÜŞTERİ EKLEME KARTI -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
             <h2 class="font-bold text-slate-700 text-sm flex items-center gap-1.5 border-b pb-2">
-                <i class="fa-solid fa-user-plus text-blue-600"></i> Yeni Müşteri Ekle (v15)
+                <i class="fa-solid fa-user-plus text-blue-600"></i> Yeni Müşteri Ekle (v16)
             </h2>
 
             <form onsubmit="musteriEkle(event)" class="space-y-3">
@@ -148,9 +148,9 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT KODU (v15) -->
+    <!-- JAVASCRIPT KODU (v16) -->
     <script>
-        const KEY = 'turkalp_sade_musteri_db_v15';
+        const KEY = 'turkalp_sade_musteri_db_v16';
         let seciliId = null;
 
         window.onload = function() {
@@ -242,9 +242,9 @@
         }
 
         function detayAç(id) {
-            seciliId = id;
+            seciliId = String(id); // ID'yi kesin string yap
             const db = oku();
-            const m = db.find(x => x.id === id);
+            const m = db.find(x => String(x.id) === seciliId);
             if (!m) return;
 
             document.getElementById('mdlAd').textContent = m.ad;
@@ -276,7 +276,10 @@
         }
 
         function islemKaydetTikla() {
-            if (!seciliId) return;
+            if (!seciliId) {
+                alert('Hata: Seçili müşteri bulunamadı. Lütfen pencereyi kapatıp tekrar açın.');
+                return;
+            }
 
             const tip = document.getElementById('islemTip').value;
             const tutarInput = document.getElementById('islemTutar');
@@ -291,16 +294,15 @@
             }
 
             const db = oku();
-            const idx = db.findIndex(x => x.id === seciliId);
+            const idx = db.findIndex(x => String(x.id) === String(seciliId));
 
             if (idx !== -1) {
                 let bak = Number(db[idx].bakiye) || 0;
                 
-                // Kesin matematiksel hesaplama:
                 if (tip === 'verdim') {
-                    bak += tutar; // Borcu artırır (+)
+                    bak += tutar; 
                 } else {
-                    bak -= tutar; // Borcu düşürür / alacağı artırır (-)
+                    bak -= tutar; 
                 }
 
                 db[idx].bakiye = bak;
@@ -319,6 +321,8 @@
                 
                 detayAç(seciliId);
                 listele();
+            } else {
+                alert('Kayıt veri tabanında bulunamadı.');
             }
         }
 
@@ -326,7 +330,7 @@
             const container = document.getElementById('mdlHareketler');
             container.innerHTML = '';
 
-            if (liste.length === 0) {
+            if (!liste || liste.length === 0) {
                 container.innerHTML = `<div class="text-center py-3 text-xs text-slate-400">İşlem geçmişi yok.</div>`;
                 return;
             }
@@ -349,14 +353,14 @@
 
         function duzenlePrompt() {
             const db = oku();
-            const m = db.find(x => x.id === seciliId);
+            const m = db.find(x => String(x.id) === String(seciliId));
             if (!m) return;
 
             const yeniAd = prompt("Müşteri Adını Güncelleyin:", m.ad);
             if (!yeniAd) return;
             const yeniTel = prompt("Telefon Numarasını Güncelleyin:", m.tel || "");
 
-            const idx = db.findIndex(x => x.id === seciliId);
+            const idx = db.findIndex(x => String(x.id) === String(seciliId));
             if (idx !== -1) {
                 db[idx].ad = yeniAd.trim();
                 db[idx].tel = yeniTel ? yeniTel.trim() : '';
@@ -369,7 +373,7 @@
         function musteriSil() {
             if (confirm('Bu müşteriyi ve tüm hesap geçmişini silmek istediğinize emin misiniz?')) {
                 let db = oku();
-                db = db.filter(x => x.id !== seciliId);
+                db = db.filter(x => String(x.id) !== String(seciliId));
                 yaz(db);
                 modalKapat();
                 listele();
