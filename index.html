@@ -131,7 +131,8 @@
                 querySnapshot.forEach((docSnap) => {
                     globalListe.push(docSnap.data());
                 });
-                globalListe.sort((a, b) => b.timestamp - a.timestamp);
+                // En son işlem yapılan (timestamp'i en büyük olan) müşteri en üste gelecek şekilde sıralanır
+                globalListe.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             } catch (e) {
                 console.error("Veri çekme hatası: ", e);
                 alert("Buluttan veriler yüklenirken bir hata oluştu.");
@@ -290,6 +291,7 @@
                 }
 
                 globalListe[index].bakiye = mevcutBakiye;
+                globalListe[index].timestamp = Date.now(); // İşlem yapıldığında zaman damgası güncellenir ve en üste taşınır
                 if (!globalListe[index].hareketler) globalListe[index].hareketler = [];
 
                 globalListe[index].hareketler.unshift({
@@ -331,6 +333,7 @@
                 }
 
                 musteri.bakiye = mevcutBakiye;
+                musteri.timestamp = Date.now(); // Hareket silindiğinde de en üste gelmesi için güncellenir
                 musteri.hareketler.splice(hareketIndex, 1);
 
                 var yukleniyor = document.getElementById('yukleniyor');
@@ -415,7 +418,4 @@
 
         <!-- LİSTE -->
         <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
-        <div id="listeContainer"></div>
-    </div>
-</body>
-</html>
+    
