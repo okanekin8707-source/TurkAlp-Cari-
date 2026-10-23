@@ -5,28 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TürkAlp - Alacak - Verecek Takibi</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
-        .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
-        input, select { width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 8px; box-sizing: border-box; border: 1px solid #aaa; border-radius: 4px; }
-        button { width: 100%; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .kisi { background: white; padding: 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #ddd; cursor: pointer; }
-        .red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
-        .green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
-        .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
-        .history { background: white; padding: 8px; border-radius: 4px; margin-top: 6px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .red { color: #cc0000; font-weight: bold; }
-        .green { color: #009933; font-weight: bold; }
-        #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f4f4f4; 
+            margin: 0; 
+            padding: 10px; 
+            color: #333; 
+        }
 
-        .baslik-ust { color: #cc0000; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; line-height: 1.1; }
-        .baslik-alt { color: #0066cc; font-size: 14px; margin-top: 2px; font-weight: bold; display: block; }
+        .box { 
+            background: white; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
+            border: 1px solid #ccc; 
+        }
 
-        .menu-container { position: relative; display: inline-block; }
-        .menu-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 140px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; border-radius: 6px; border: 1px solid #ccc; overflow: hidden; }
-        .menu-content button { background: white; color: #333; text-align: left; padding: 10px; border-radius: 0; border-bottom: 1px solid #eee; }
-        .menu-content button:hover { background-color: #f1f1f1; }
-        .menu-show { display: block; }
+        input, select { 
+            width: 100%; 
+            padding: 8px; 
+            margin-top: 4px; 
+            margin-bottom: 8px; 
+            box-sizing: border-box; 
+            border: 1px solid #aaa; 
+            border-radius: 4px; 
+        }
+
+        button { 
+            width: 100%; 
+            padding: 10px; 
+            background: #0066cc; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+
+        .kisi { 
+            background: white; 
+            padding: 12px; 
+            border-radius: 6px; 
+            margin-bottom: 6px; 
+            border: 1px solid #ddd; 
+            cursor: pointer; 
+        }
+
+        .red-bg { 
+            border-left: 6px solid #cc0000; 
+            background-color: #fff5f5; 
+        }
+
+        .green-bg { 
+            border-left: 6px solid #009933; 
+            background-color: #f2fff2; 
+        }
+
+        .panel { 
+            background: #e6f2ff; 
+            padding: 10px; 
+            border-radius: 6px; 
+            margin-top: 8px; 
+            border: 1px solid #b3d1ff; 
+        }
+
+        .history { 
+            background: white; 
+            padding: 8px; 
+            border-radius: 4px; 
+            margin-top: 6px; 
+            font-size: 12px; 
+            border: 1px solid #eee; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .red { 
+            color: #cc0000; 
+            font-weight: bold; 
+        }
+
+        .green { 
+            color: #009933; 
+            font-weight: bold; 
+        }
+
+        #sifreEkrani { 
+            position: fixed; 
+            inset: 0; 
+            background: #f4f4f4; 
+            z-index: 999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
+
+        #yukleniyor { 
+            text-align: center; 
+            padding: 20px; 
+            color: #0066cc; 
+            font-weight: bold; 
+        }
+
+        .baslik-ust { 
+            color: #cc0000; 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin: 0; 
+            letter-spacing: 1px; 
+            line-height: 1.1; 
+        }
+
+        .baslik-alt { 
+            color: #0066cc; 
+            font-size: 14px; 
+            margin-top: 2px; 
+            font-weight: bold; 
+            display: block; 
+        }
+
+        .menu-container { 
+            position: relative; 
+            display: inline-block; 
+        }
+
+        .menu-content { 
+            display: none; 
+            position: absolute; 
+            right: 0; 
+            background-color: #f9f9f9; 
+            min-width: 140px; 
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2); 
+            z-index: 1; 
+            border-radius: 6px; 
+            border: 1px solid #ccc; 
+            overflow: hidden; 
+        }
+
+        .menu-content button { 
+            background: white; 
+            color: #333; 
+            text-align: left; 
+            padding: 10px; 
+            border-radius: 0; 
+            border-bottom: 1px solid #eee; 
+        }
+
+        .menu-content button:hover { 
+            background-color: #f1f1f1; 
+        }
+
+        .menu-show { 
+            display: block; 
+        }
     </style>
 
     <!-- Firebase SDK (Modular v10) -->
@@ -49,7 +182,8 @@
 
         const SIFRE_KEY = 'turkalp_sifre_v1';
         const OTURUM_KEY = 'turkalp_oturum_acik';
-        const FIRESTORE_KOLLEKSIYON = 'musteriler';
+        const FIRESTORE_KOLLEKSIYON = 'turkalp_musteriler';
+
         let globalListe = [];
         let seciliMusteriId = null;
 
@@ -57,7 +191,9 @@
             var kayitliSifre = localStorage.getItem(SIFRE_KEY);
             var bilgiEl = document.getElementById('sifreBilgi');
             if (!kayitliSifre) {
-                if (bilgiEl) bilgiEl.textContent = "İlk kullanım için yeni bir şifre belirleyin:";
+                if (bilgiEl) {
+                    bilgiEl.textContent = "İlk kullanım için yeni bir şifre belirleyin:";
+                }
             } else {
                 var oturumAcik = localStorage.getItem(OTURUM_KEY);
                 if (oturumAcik === 'true') {
@@ -93,8 +229,12 @@
         function gizliEkraniKapat() {
             var sEkrani = document.getElementById('sifreEkrani');
             var aUygulama = document.getElementById('anaUygulama');
-            if (sEkrani) sEkrani.style.display = 'none';
-            if (aUygulama) aUygulama.style.display = 'block';
+            if (sEkrani) {
+                sEkrani.style.display = 'none';
+            }
+            if (aUygulama) {
+                aUygulama.style.display = 'block';
+            }
             verileriBuluttanCek();
         }
 
@@ -125,20 +265,23 @@
 
         async function verileriBuluttanCek() {
             var yukleniyor = document.getElementById('yukleniyor');
-            if (yukleniyor) yukleniyor.style.display = 'block';
+            if (yukleniyor) {
+                yukleniyor.style.display = 'block';
+            }
             try {
                 const querySnapshot = await getDocs(collection(db, FIRESTORE_KOLLEKSIYON));
                 globalListe = [];
                 querySnapshot.forEach((docSnap) => {
                     globalListe.push(docSnap.data());
                 });
-                // GÜVENLİ SIRALAMA: Eksik timestamp hatasını önler, liste boş kalmaz
                 globalListe.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             } catch (e) {
                 console.error("Veri çekme hatası: ", e);
                 alert("Buluttan veriler yüklenirken bir hata oluştu.");
             }
-            if (yukleniyor) yukleniyor.style.display = 'none';
+            if (yukleniyor) {
+                yukleniyor.style.display = 'none';
+            }
             listeyiEkranaBas();
         }
 
@@ -161,7 +304,9 @@
             };
 
             var yukleniyor = document.getElementById('yukleniyor');
-            if (yukleniyor) yukleniyor.style.display = 'block';
+            if (yukleniyor) {
+                yukleniyor.style.display = 'block';
+            }
             try {
                 await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, idVal), yeniMusteri);
                 adInput.value = "";
@@ -170,7 +315,9 @@
             } catch (e) {
                 console.error("Kayıt hatası: ", e);
                 alert("Kayıt sırasında hata oluştu.");
-                if (yukleniyor) yukleniyor.style.display = 'none';
+                if (yukleniyor) {
+                    yukleniyor.style.display = 'none';
+                }
             }
         };
 
@@ -182,11 +329,13 @@
             container.innerHTML = "";
 
             var filtrelenmisListe = globalListe.filter(function(m) {
-                return m.ad.toLowerCase().includes(aramaMetni);
+                return m.ad && m.ad.toLowerCase().includes(aramaMetni);
             });
 
             var sayac = document.getElementById('sayac');
-            if (sayac) sayac.textContent = filtrelenmisListe.length;
+            if (sayac) {
+                sayac.textContent = filtrelenmisListe.length;
+            }
 
             if (filtrelenmisListe.length === 0) {
                 container.innerHTML = '<div style="text-align:center; color:#777; padding:10px;">Kayıtlı müşteri bulunamadı.</div>';
@@ -201,7 +350,9 @@
 
                 var div = document.createElement('div');
                 div.className = 'kisi';
-                if (bgClass) div.classList.add(bgClass);
+                if (bgClass) {
+                    div.classList.add(bgClass);
+                }
                 
                 var icerik = '<div onclick="sec(\'' + m.id + '\')" style="display:flex; justify-content:space-between; align-items:center;">' +
                     '<div>' +
@@ -293,7 +444,9 @@
 
                 globalListe[index].bakiye = mevcutBakiye;
                 globalListe[index].timestamp = Date.now();
-                if (!globalListe[index].hareketler) globalListe[index].hareketler = [];
+                if (!globalListe[index].hareketler) {
+                    globalListe[index].hareketler = [];
+                }
 
                 globalListe[index].hareketler.unshift({
                     tarih: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
@@ -303,7 +456,9 @@
                 });
 
                 var yukleniyor = document.getElementById('yukleniyor');
-                if (yukleniyor) yukleniyor.style.display = 'block';
+                if (yukleniyor) {
+                    yukleniyor.style.display = 'block';
+                }
                 try {
                     await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, id), globalListe[index]);
                     await verileriBuluttanCek();
@@ -311,7 +466,9 @@
                 } catch (e) {
                     console.error("İşlem hatası: ", e);
                     alert("İşlem kaydedilirken hata oluştu.");
-                    if (yukleniyor) yukleniyor.style.display = 'none';
+                    if (yukleniyor) {
+                        yukleniyor.style.display = 'none';
+                    }
                 }
             }
         };
@@ -338,7 +495,9 @@
                 musteri.hareketler.splice(hareketIndex, 1);
 
                 var yukleniyor = document.getElementById('yukleniyor');
-                if (yukleniyor) yukleniyor.style.display = 'block';
+                if (yukleniyor) {
+                    yukleniyor.style.display = 'block';
+                }
                 try {
                     await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, musteriId), musteri);
                     await verileriBuluttanCek();
@@ -346,7 +505,9 @@
                 } catch (e) {
                     console.error("İşlem silme hatası: ", e);
                     alert("İşlem silinirken hata oluştu.");
-                    if (yukleniyor) yukleniyor.style.display = 'none';
+                    if (yukleniyor) {
+                        yukleniyor.style.display = 'none';
+                    }
                 }
             }
         };
@@ -354,7 +515,9 @@
         window.musteriSil = async function(id) {
             if (confirm("Bu müşteriyi TÜMÜYLE silmek istediğinize emin misiniz?")) {
                 var yukleniyor = document.getElementById('yukleniyor');
-                if (yukleniyor) yukleniyor.style.display = 'block';
+                if (yukleniyor) {
+                    yukleniyor.style.display = 'block';
+                }
                 try {
                     await deleteDoc(doc(db, FIRESTORE_KOLLEKSIYON, id));
                     seciliMusteriId = null;
@@ -363,7 +526,9 @@
                 } catch (e) {
                     console.error("Silme hatası: ", e);
                     alert("Silme sırasında hata oluştu.");
-                    if (yukleniyor) yukleniyor.style.display = 'none';
+                    if (yukleniyor) {
+                        yukleniyor.style.display = 'none';
+                    }
                 }
             }
         };
@@ -375,48 +540,4 @@
     <div id="sifreEkrani">
         <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
             <div style="margin-bottom: 15px;">
-                <h2 class="baslik-ust">TÜRKALP</h2>
-                <span class="baslik-alt">Alacak - Verecek Takibi</span>
-            </div>
-            <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
-            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
-            <button onclick="sifreKontrol()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <!-- ANA UYGULAMA -->
-    <div id="anaUygulama" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <div>
-                <h2 class="baslik-ust">TÜRKALP</h2>
-                <span class="baslik-alt">Alacak - Verecek Takibi</span>
-            </div>
-            
-            <!-- AÇILIR MENÜ ALANI -->
-            <div class="menu-container">
-                <button onclick="menuAcKapat()" style="width: auto; padding: 8px 14px; background: #444; font-size: 14px;">⚙️ Menü</button>
-                <div id="ayarlarMenu" class="menu-content">
-                    <button onclick="sifreDegistir()">🔑 Şifre Değiştir</button>
-                    <button onclick="cikisYap()" style="color: #cc0000;">🚪 Çıkış Yap</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- YENİ MÜŞTERİ EKLEME -->
-        <div class="box">
-            <label>Yeni Müşteri:</label>
-            <input type="text" id="yeniAranan" style="display:none;"><!-- Yedek -->
-            <input type="text" id="yeniAd" placeholder="Müşteri adı...">
-            <button onclick="kaydet()">Kaydet</button>
-        </div>
-
-        <!-- MÜŞTERİ ARAMA KUTUSU -->
-        <div class="box">
-            <b>Müşteri Ara</b>
-            <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
-        </div>
-
-        <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
-
-        <!-- LİSTE -->
-        <h3>Müşteri Listesi (<span 
+                
