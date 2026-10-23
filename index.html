@@ -49,6 +49,7 @@
 
         const SIFRE_KEY = 'turkalp_sifre_v1';
         const OTURUM_KEY = 'turkalp_oturum_acik';
+        const FIRESTORE_KOLLEKSIYON = 'musteriler';
         let globalListe = [];
         let seciliMusteriId = null;
 
@@ -126,12 +127,13 @@
             var yukleniyor = document.getElementById('yukleniyor');
             if (yukleniyor) yukleniyor.style.display = 'block';
             try {
-                const querySnapshot = await getDocs(collection(db, "musteriler"));
+                const querySnapshot = await getDocs(collection(db, FIRESTORE_KOLLEKSIYON));
                 globalListe = [];
                 querySnapshot.forEach((docSnap) => {
                     globalListe.push(docSnap.data());
                 });
-                globalListe.sort((a, b) => b.timestamp - a.timestamp);
+                // GÜVENLİ SIRALAMA: Eksik timestamp hatasını önler, liste boş kalmaz
+                globalListe.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             } catch (e) {
                 console.error("Veri çekme hatası: ", e);
                 alert("Buluttan veriler yüklenirken bir hata oluştu.");
@@ -161,7 +163,7 @@
             var yukleniyor = document.getElementById('yukleniyor');
             if (yukleniyor) yukleniyor.style.display = 'block';
             try {
-                await setDoc(doc(db, "musteriler", idVal), yeniMusteri);
+                await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, idVal), yeniMusteri);
                 adInput.value = "";
                 await verileriBuluttanCek();
                 alert("Müşteri buluta başarıyla kaydedildi!");
@@ -290,6 +292,7 @@
                 }
 
                 globalListe[index].bakiye = mevcutBakiye;
+                globalListe[index].timestamp = Date.now();
                 if (!globalListe[index].hareketler) globalListe[index].hareketler = [];
 
                 globalListe[index].hareketler.unshift({
@@ -302,7 +305,7 @@
                 var yukleniyor = document.getElementById('yukleniyor');
                 if (yukleniyor) yukleniyor.style.display = 'block';
                 try {
-                    await setDoc(doc(db, "musteriler", id), globalListe[index]);
+                    await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, id), globalListe[index]);
                     await verileriBuluttanCek();
                     alert("İşlem buluta başarıyla kaydedildi!");
                 } catch (e) {
@@ -331,12 +334,13 @@
                 }
 
                 musteri.bakiye = mevcutBakiye;
+                musteri.timestamp = Date.now();
                 musteri.hareketler.splice(hareketIndex, 1);
 
                 var yukleniyor = document.getElementById('yukleniyor');
                 if (yukleniyor) yukleniyor.style.display = 'block';
                 try {
-                    await setDoc(doc(db, "musteriler", musteriId), musteri);
+                    await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, musteriId), musteri);
                     await verileriBuluttanCek();
                     alert("İşlem silindi ve bakiye güncellendi!");
                 } catch (e) {
@@ -352,7 +356,7 @@
                 var yukleniyor = document.getElementById('yukleniyor');
                 if (yukleniyor) yukleniyor.style.display = 'block';
                 try {
-                    await deleteDoc(doc(db, "musteriler", id));
+                    await deleteDoc(doc(db, FIRESTORE_KOLLEKSIYON, id));
                     seciliMusteriId = null;
                     await verileriBuluttanCek();
                     alert("Müşteri silindi!");
@@ -401,6 +405,7 @@
         <!-- YENİ MÜŞTERİ EKLEME -->
         <div class="box">
             <label>Yeni Müşteri:</label>
+            <input type="text" id="yeniAranan" style="display:none;"><!-- Yedek -->
             <input type="text" id="yeniAd" placeholder="Müşteri adı...">
             <button onclick="kaydet()">Kaydet</button>
         </div>
@@ -414,8 +419,4 @@
         <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
 
         <!-- LİSTE -->
-        <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
-        <div id="listeContainer"></div>
-    </div>
-</body>
-</html>
+        <h3>Müşteri Listesi (<span 
