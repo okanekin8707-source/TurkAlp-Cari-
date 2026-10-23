@@ -5,161 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TürkAlp - Alacak - Verecek Takibi</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #f4f4f4; 
-            margin: 0; 
-            padding: 10px; 
-            color: #333; 
-        }
-
-        .box { 
-            background: white; 
-            padding: 12px; 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-            border: 1px solid #ccc; 
-        }
-
-        input, select { 
-            width: 100%; 
-            padding: 8px; 
-            margin-top: 4px; 
-            margin-bottom: 8px; 
-            box-sizing: border-box; 
-            border: 1px solid #aaa; 
-            border-radius: 4px; 
-        }
-
-        button { 
-            width: 100%; 
-            padding: 10px; 
-            background: #0066cc; 
-            color: white; 
-            border: none; 
-            border-radius: 4px; 
-            font-weight: bold; 
-            cursor: pointer; 
-        }
-
-        .kisi { 
-            background: white; 
-            padding: 12px; 
-            border-radius: 6px; 
-            margin-bottom: 6px; 
-            border: 1px solid #ddd; 
-            cursor: pointer; 
-        }
-
-        .red-bg { 
-            border-left: 6px solid #cc0000; 
-            background-color: #fff5f5; 
-        }
-
-        .green-bg { 
-            border-left: 6px solid #009933; 
-            background-color: #f2fff2; 
-        }
-
-        .panel { 
-            background: #e6f2ff; 
-            padding: 10px; 
-            border-radius: 6px; 
-            margin-top: 8px; 
-            border: 1px solid #b3d1ff; 
-        }
-
-        .history { 
-            background: white; 
-            padding: 8px; 
-            border-radius: 4px; 
-            margin-top: 6px; 
-            font-size: 12px; 
-            border: 1px solid #eee; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-
-        .red { 
-            color: #cc0000; 
-            font-weight: bold; 
-        }
-
-        .green { 
-            color: #009933; 
-            font-weight: bold; 
-        }
-
-        #sifreEkrani { 
-            position: fixed; 
-            inset: 0; 
-            background: #f4f4f4; 
-            z-index: 999; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px; 
-        }
-
-        #yukleniyor { 
-            text-align: center; 
-            padding: 20px; 
-            color: #0066cc; 
-            font-weight: bold; 
-        }
-
-        .baslik-ust { 
-            color: #cc0000; 
-            font-size: 24px; 
-            font-weight: bold; 
-            margin: 0; 
-            letter-spacing: 1px; 
-            line-height: 1.1; 
-        }
-
-        .baslik-alt { 
-            color: #0066cc; 
-            font-size: 14px; 
-            margin-top: 2px; 
-            font-weight: bold; 
-            display: block; 
-        }
-
-        .menu-container { 
-            position: relative; 
-            display: inline-block; 
-        }
-
-        .menu-content { 
-            display: none; 
-            position: absolute; 
-            right: 0; 
-            background-color: #f9f9f9; 
-            min-width: 140px; 
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2); 
-            z-index: 1; 
-            border-radius: 6px; 
-            border: 1px solid #ccc; 
-            overflow: hidden; 
-        }
-
-        .menu-content button { 
-            background: white; 
-            color: #333; 
-            text-align: left; 
-            padding: 10px; 
-            border-radius: 0; 
-            border-bottom: 1px solid #eee; 
-        }
-
-        .menu-content button:hover { 
-            background-color: #f1f1f1; 
-        }
-
-        .menu-show { 
-            display: block; 
-        }
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 10px; color: #333; }
+        .box { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
+        input, select { width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 8px; box-sizing: border-box; border: 1px solid #aaa; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .kisi { background: white; padding: 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #ddd; cursor: pointer; }
+        .red-bg { border-left: 6px solid #cc0000; background-color: #fff5f5; }
+        .green-bg { border-left: 6px solid #009933; background-color: #f2fff2; }
+        .panel { background: #e6f2ff; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px solid #b3d1ff; }
+        .history { background: white; padding: 8px; border-radius: 4px; margin-top: 6px; font-size: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .red { color: #cc0000; font-weight: bold; }
+        .green { color: #009933; font-weight: bold; }
+        #sifreEkrani { position: fixed; inset: 0; background: #f4f4f4; z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #yukleniyor { text-align: center; padding: 20px; color: #0066cc; font-weight: bold; }
+        .baslik-ust { color: #cc0000; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; line-height: 1.1; }
+        .baslik-alt { color: #0066cc; font-size: 14px; margin-top: 2px; font-weight: bold; display: block; }
+        .menu-container { position: relative; display: inline-block; }
+        .menu-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 140px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; border-radius: 6px; border: 1px solid #ccc; overflow: hidden; }
+        .menu-content button { background: white; color: #333; text-align: left; padding: 10px; border-radius: 0; border-bottom: 1px solid #eee; }
+        .menu-content button:hover { background-color: #f1f1f1; }
+        .menu-show { display: block; }
     </style>
 
     <!-- Firebase SDK (Modular v10) -->
@@ -187,25 +52,17 @@
         let globalListe = [];
         let seciliMusteriId = null;
 
-        function uygulamaBaslat() {
+        function baslat() {
             var kayitliSifre = localStorage.getItem(SIFRE_KEY);
             var bilgiEl = document.getElementById('sifreBilgi');
             if (!kayitliSifre) {
-                if (bilgiEl) {
-                    bilgiEl.textContent = "İlk kullanım için yeni bir şifre belirleyin:";
-                }
+                if (bilgiEl) bilgiEl.textContent = "İlk kullanım için yeni bir şifre belirleyin:";
             } else {
                 var oturumAcik = localStorage.getItem(OTURUM_KEY);
                 if (oturumAcik === 'true') {
                     gizliEkraniKapat();
                 }
             }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', uygulamaBaslat);
-        } else {
-            uygulamaBaslat();
         }
 
         window.sifreKontrol = function() {
@@ -235,12 +92,8 @@
         function gizliEkraniKapat() {
             var sEkrani = document.getElementById('sifreEkrani');
             var aUygulama = document.getElementById('anaUygulama');
-            if (sEkrani) {
-                sEkrani.style.display = 'none';
-            }
-            if (aUygulama) {
-                aUygulama.style.display = 'block';
-            }
+            if (sEkrani) sEkrani.style.display = 'none';
+            if (aUygulama) aUygulama.style.display = 'block';
             verileriBuluttanCek();
         }
 
@@ -271,9 +124,7 @@
 
         async function verileriBuluttanCek() {
             var yukleniyor = document.getElementById('yukleniyor');
-            if (yukleniyor) {
-                yukleniyor.style.display = 'block';
-            }
+            if (yukleniyor) yukleniyor.style.display = 'block';
             try {
                 const querySnapshot = await getDocs(collection(db, FIRESTORE_KOLLEKSIYON));
                 globalListe = [];
@@ -285,9 +136,7 @@
                 console.error("Veri çekme hatası: ", e);
                 alert("Buluttan veriler yüklenirken bir hata oluştu.");
             }
-            if (yukleniyor) {
-                yukleniyor.style.display = 'none';
-            }
+            if (yukleniyor) yukleniyor.style.display = 'none';
             listeyiEkranaBas();
         }
 
@@ -310,9 +159,7 @@
             };
 
             var yukleniyor = document.getElementById('yukleniyor');
-            if (yukleniyor) {
-                yukleniyor.style.display = 'block';
-            }
+            if (yukleniyor) yukleniyor.style.display = 'block';
             try {
                 await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, idVal), yeniMusteri);
                 adInput.value = "";
@@ -321,9 +168,7 @@
             } catch (e) {
                 console.error("Kayıt hatası: ", e);
                 alert("Kayıt sırasında hata oluştu.");
-                if (yukleniyor) {
-                    yukleniyor.style.display = 'none';
-                }
+                if (yukleniyor) yukleniyor.style.display = 'none';
             }
         };
 
@@ -339,9 +184,7 @@
             });
 
             var sayac = document.getElementById('sayac');
-            if (sayac) {
-                sayac.textContent = filtrelenmisListe.length;
-            }
+            if (sayac) sayac.textContent = filtrelenmisListe.length;
 
             if (filtrelenmisListe.length === 0) {
                 container.innerHTML = '<div style="text-align:center; color:#777; padding:10px;">Kayıtlı müşteri bulunamadı.</div>';
@@ -351,5 +194,232 @@
             filtrelenmisListe.forEach(function(m) {
                 var bakiye = Number(m.bakiye) || 0;
                 var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
-                var bgClass = bakiye > 0 ? 'red-bg' : (bakiye < 0 ? '
-        
+                var bgClass = bakiye > 0 ? 'red-bg' : (bakiye < 0 ? 'green-bg' : '');
+                var durumMetni = bakiye > 0 ? 'Alacaklısınız (Borçlu)' : (bakiye < 0 ? 'Borçlusunuz (Alacaklı)' : 'Dengede');
+
+                var div = document.createElement('div');
+                div.className = 'kisi';
+                if (bgClass) div.classList.add(bgClass);
+                
+                var icerik = '<div onclick="sec(\'' + m.id + '\')" style="display:flex; justify-content:space-between; align-items:center;">' +
+                    '<div>' +
+                        '<b style="font-size:16px;">👤 ' + m.ad + '</b>' +
+                    '</div>' +
+                    '<div style="text-align:right;">' +
+                        '<span class="' + renk + '" style="font-size:15px;">' + Math.abs(bakiye).toFixed(2) + ' ₺</span><br>' +
+                        '<span style="font-size:11px;" class="' + renk + '">' + durumMetni + '</span>' +
+                    '</div>' +
+                '</div>';
+
+                if (String(m.id) === String(seciliMusteriId)) {
+                    icerik += '<div class="panel">' +
+                        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #b3d1ff; padding-bottom:6px;">' +
+                            '<span style="font-size:12px; color:#555;"><b>Müşteri Yönetimi</b></span>' +
+                            '<button onclick="event.stopPropagation(); musteriSil(\'' + m.id + '\')" style="width:auto; padding:4px 10px; background:#cc0000; font-size:11px;">Müşteriyi Sil</button>' +
+                        '</div>' +
+
+                        '<b>İşlem / Malzeme Ekle</b><br>' +
+                        '<label>İşlem Türü:</label>' +
+                        '<select id="islemTip_' + m.id + '">' +
+                            '<option value="verdim">Mal/Borç Verdim (+ Artırır)</option>' +
+                            '<option value="aldim">Para/Tahsilat Aldım (- Düşer)</option>' +
+                        '</select>' +
+                        '<label>Tutar (₺):</label>' +
+                        '<input type="number" step="0.01" id="islemTutar_' + m.id + '" placeholder="0.00">' +
+                        '<label>Açıklama:</label>' +
+                        '<input type="text" id="islemAciklama_' + m.id + '" placeholder="Örn: Nakit / Malzeme">' +
+                        '<button onclick="islemYap(\'' + m.id + '\')" style="background:#009933;">İşlemi Kaydet ve Hesapla</button>' +
+                        
+                        '<hr style="margin:10px 0; border:0; border-top:1px solid #ccc;">' +
+                        '<b>Hesap Geçmişi:</b>';
+
+                    if (m.hareketler && m.hareketler.length > 0) {
+                        m.hareketler.forEach(function(h, index) {
+                            var hRenk = h.tip === 'verdim' ? 'red' : 'green';
+                            icerik += '<div class="history">' +
+                                '<div><b>' + h.aciklama + '</b> <small>(' + h.tarih + ')</small><br>' +
+                                '<span class="' + hRenk + '">' + (h.tip === 'verdim' ? '+' : '-') + Number(h.tutar).toFixed(2) + ' ₺</span></div>' +
+                                '<button onclick="event.stopPropagation(); hareketSil(\'' + m.id + '\', ' + index + ')" style="width:auto; padding:4px 8px; background:#cc0000; font-size:11px;">Sil</button>' +
+                            '</div>';
+                        });
+                    } else {
+                        icerik += '<div style="font-size:12px; color:#777; margin-top:4px;">İşlem geçmişi yok.</div>';
+                    }
+
+                    icerik += '</div>';
+                }
+
+                div.innerHTML = icerik;
+                container.appendChild(div);
+            });
+        };
+
+        window.sec = function(id) {
+            if (seciliMusteriId === id) {
+                seciliMusteriId = null;
+            } else {
+                seciliMusteriId = id;
+            }
+            listeyiEkranaBas();
+        };
+
+        window.islemYap = async function(id) {
+            var tip = document.getElementById('islemTip_' + id).value;
+            var tutarVal = document.getElementById('islemTutar_' + id).value;
+            var aciklamaVal = document.getElementById('islemAciklama_' + id).value.trim();
+
+            var tutar = parseFloat(tutarVal);
+            if (isNaN(tutar) || tutar <= 0) {
+                alert("Lütfen geçerli bir tutar giriniz!");
+                return;
+            }
+
+            if (!aciklamaVal) {
+                aciklamaVal = tip === 'verdim' ? 'Mal/Borç Verildi' : 'Tahsilat Alındı';
+            }
+
+            var index = globalListe.findIndex(function(x) { return String(x.id) === String(id); });
+
+            if (index !== -1) {
+                var mevcutBakiye = Number(globalListe[index].bakiye) || 0;
+
+                if (tip === 'verdim') {
+                    mevcutBakiye += tutar;
+                } else {
+                    mevcutBakiye -= tutar;
+                }
+
+                globalListe[index].bakiye = mevcutBakiye;
+                globalListe[index].timestamp = Date.now();
+                if (!globalListe[index].hareketler) globalListe[index].hareketler = [];
+
+                globalListe[index].hareketler.unshift({
+                    tarih: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+                    aciklama: aciklamaVal,
+                    tip: tip,
+                    tutar: tutar
+                });
+
+                var yukleniyor = document.getElementById('yukleniyor');
+                if (yukleniyor) yukleniyor.style.display = 'block';
+                try {
+                    await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, id), globalListe[index]);
+                    await verileriBuluttanCek();
+                    alert("İşlem buluta başarıyla kaydedildi!");
+                } catch (e) {
+                    console.error("İşlem hatası: ", e);
+                    alert("İşlem kaydedilirken hata oluştu.");
+                    if (yukleniyor) yukleniyor.style.display = 'none';
+                }
+            }
+        };
+
+        window.hareketSil = async function(musteriId, hareketIndex) {
+            if (!confirm("Bu işlemi silmek istediğinize emin misiniz? Bakiye buna göre güncellenecektir.")) {
+                return;
+            }
+
+            var index = globalListe.findIndex(function(x) { return String(x.id) === String(musteriId); });
+            if (index !== -1) {
+                var musteri = globalListe[index];
+                var silinecekHareket = musteri.hareketler[hareketIndex];
+
+                var mevcutBakiye = Number(musteri.bakiye) || 0;
+                if (silinecekHareket.tip === 'verdim') {
+                    mevcutBakiye -= Number(silinecekHareket.tutar);
+                } else {
+                    mevcutBakiye += Number(silinecekHareket.tutar);
+                }
+
+                musteri.bakiye = mevcutBakiye;
+                musteri.timestamp = Date.now();
+                musteri.hareketler.splice(hareketIndex, 1);
+
+                var yukleniyor = document.getElementById('yukleniyor');
+                if (yukleniyor) yukleniyor.style.display = 'block';
+                try {
+                    await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, musteriId), musteri);
+                    await verileriBuluttanCek();
+                    alert("İşlem silindi ve bakiye güncellendi!");
+                } catch (e) {
+                    console.error("İşlem silme hatası: ", e);
+                    alert("İşlem silinirken hata oluştu.");
+                    if (yukleniyor) yukleniyor.style.display = 'none';
+                }
+            }
+        };
+
+        window.musteriSil = async function(id) {
+            if (confirm("Bu müşteriyi TÜMÜYLE silmek istediğinize emin misiniz?")) {
+                var yukleniyor = document.getElementById('yukleniyor');
+                if (yukleniyor) yukleniyor.style.display = 'block';
+                try {
+                    await deleteDoc(doc(db, FIRESTORE_KOLLEKSIYON, id));
+                    seciliMusteriId = null;
+                    await verileriBuluttanCek();
+                    alert("Müşteri silindi!");
+                } catch (e) {
+                    console.error("Silme hatası: ", e);
+                    alert("Silme sırasında hata oluştu.");
+                    if (yukleniyor) yukleniyor.style.display = 'none';
+                }
+            }
+        };
+
+        baslat();
+    </script>
+</head>
+<body>
+
+    <!-- ŞİFRE GİRİŞ EKRANI -->
+    <div id="sifreEkrani">
+        <div class="box" style="width: 100%; max-width: 320px; text-align: center;">
+            <div style="margin-bottom: 15px;">
+                <h2 class="baslik-ust">TÜRKALP</h2>
+                <span class="baslik-alt">Alacak - Verecek Takibi</span>
+            </div>
+            <p id="sifreBilgi" style="font-size: 13px; color: #666;">Lütfen giriş şifrenizi girin:</p>
+            <input type="password" id="girisSifre" placeholder="Şifre" style="text-align: center; font-size: 16px;">
+            <button onclick="sifreKontrol()">Giriş Yap</button>
+        </div>
+    </div>
+
+    <!-- ANA UYGULAMA -->
+    <div id="anaUygulama" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div>
+                <h2 class="baslik-ust">TÜRKALP</h2>
+                <span class="baslik-alt">Alacak - Verecek Takibi</span>
+            </div>
+            
+            <!-- AÇILIR MENÜ ALANI -->
+            <div class="menu-container">
+                <button onclick="menuAcKapat()" style="width: auto; padding: 8px 14px; background: #444; font-size: 14px;">⚙️ Menü</button>
+                <div id="ayarlarMenu" class="menu-content">
+                    <button onclick="sifreDegistir()">🔑 Şifre Değiştir</button>
+                    <button onclick="cikisYap()" style="color: #cc0000;">🚪 Çıkış Yap</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- YENİ MÜŞTERİ EKLEME -->
+        <div class="box">
+            <label>Yeni Müşteri:</label>
+            <input type="text" id="yeniAd" placeholder="Müşteri adı...">
+            <button onclick="kaydet()">Kaydet</button>
+        </div>
+
+        <!-- MÜŞTERİ ARAMA KUTUSU -->
+        <div class="box">
+            <b>Müşteri Ara</b>
+            <input type="text" id="aramaKutusu" oninput="listeyiEkranaBas()" placeholder="İsim yazarak ara...">
+        </div>
+
+        <div id="yukleniyor">Veriler buluttan yükleniyor...</div>
+
+        <!-- LİSTE -->
+        <h3>Müşteri Listesi (<span id="sayac">0</span>)</h3>
+        <div id="listeContainer"></div>
+    </div>
+</body>
+</html>
