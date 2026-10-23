@@ -187,7 +187,7 @@
         let globalListe = [];
         let seciliMusteriId = null;
 
-        window.onload = function() {
+        function uygulamaBaslat() {
             var kayitliSifre = localStorage.getItem(SIFRE_KEY);
             var bilgiEl = document.getElementById('sifreBilgi');
             if (!kayitliSifre) {
@@ -200,7 +200,13 @@
                     gizliEkraniKapat();
                 }
             }
-        };
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', uygulamaBaslat);
+        } else {
+            uygulamaBaslat();
+        }
 
         window.sifreKontrol = function() {
             var girilen = document.getElementById('girisSifre').value;
@@ -300,4 +306,50 @@
                 ad: ad,
                 bakiye: 0,
                 hareketler: [],
+                timestamp: Date.now()
+            };
+
+            var yukleniyor = document.getElementById('yukleniyor');
+            if (yukleniyor) {
+                yukleniyor.style.display = 'block';
+            }
+            try {
+                await setDoc(doc(db, FIRESTORE_KOLLEKSIYON, idVal), yeniMusteri);
+                adInput.value = "";
+                await verileriBuluttanCek();
+                alert("Müşteri buluta başarıyla kaydedildi!");
+            } catch (e) {
+                console.error("Kayıt hatası: ", e);
+                alert("Kayıt sırasında hata oluştu.");
+                if (yukleniyor) {
+                    yukleniyor.style.display = 'none';
+                }
+            }
+        };
+
+        window.listeyiEkranaBas = function() {
+            var aramaKutusu = document.getElementById('aramaKutusu');
+            var aramaMetni = aramaKutusu ? aramaKutusu.value.toLowerCase().trim() : "";
+            var container = document.getElementById('listeContainer');
+            if (!container) return;
+            container.innerHTML = "";
+
+            var filtrelenmisListe = globalListe.filter(function(m) {
+                return m.ad && m.ad.toLowerCase().includes(aramaMetni);
+            });
+
+            var sayac = document.getElementById('sayac');
+            if (sayac) {
+                sayac.textContent = filtrelenmisListe.length;
+            }
+
+            if (filtrelenmisListe.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#777; padding:10px;">Kayıtlı müşteri bulunamadı.</div>';
+                return;
+            }
+
+            filtrelenmisListe.forEach(function(m) {
+                var bakiye = Number(m.bakiye) || 0;
+                var renk = bakiye > 0 ? 'red' : (bakiye < 0 ? 'green' : '');
+                var bgClass = bakiye > 0 ? 'red-bg' : (bakiye < 0 ? '
         
